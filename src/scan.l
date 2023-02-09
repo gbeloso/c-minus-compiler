@@ -46,8 +46,8 @@ whitespace  [ \t]+
 
 void main(int arcg, char ** argv){
     int temp = 1;
-    fonte = fopen("exemplo.c", "r");
-    tokens = fopen("tokens.txt", "w");
+    fonte = fopen("exemplos/exemplo.c", "r");
+    tokens = fopen("saida/tokens.txt", "w");
     yyin = fonte;
     while(temp != 0){
         temp = yylex();
