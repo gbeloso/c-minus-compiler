@@ -1,0 +1,13 @@
+<int, INT> <gcd, ID> <(, LPAREN><int, INT> <u, ID><,, COMMA> <int, INT> <v, ID><), RPAREN> <{, LBRACE> 
+    <if, ID> <(, LPAREN><v, ID> <==, DEQUAL> <0, NUM><), RPAREN> <return, RETURN> <u, ID> <;, SEMICOLON> 
+    <else, ID> <return, RETURN> <gcd, ID><(, LPAREN><v, ID><,, COMMA><u, ID><-, MINUS><u, ID></, SLASH><v, ID><*, TIMES><v, ID><), RPAREN><;, SEMICOLON> 
+    </, SLASH><*, TIMES> <u, ID><-, MINUS><u, ID></, SLASH><v, ID><*, TIMES><v, ID> <==, DEQUAL> <u, ID> <mod, ID> <v, ID> <*, TIMES></, SLASH>
+<}, RBRACE>
+
+<void, VOID> <main, ID><(, LPAREN><void, VOID><), RPAREN> <{, LBRACE> 
+    <int, INT> <x, ID><;, SEMICOLON> 
+    <int, INT> <y, ID><;, SEMICOLON>
+    <x, ID> <=, EQUAL> <input, ID><(, LPAREN><), RPAREN><;, SEMICOLON> 
+    <y, ID> <=, EQUAL> <input, ID><(, LPAREN><), RPAREN><;, SEMICOLON> 
+    <output, ID><(, LPAREN><gcd, ID><(, LPAREN><x, ID><,, COMMA><y, ID><), RPAREN><), RPAREN><;, SEMICOLON>
+<}, RBRACE>

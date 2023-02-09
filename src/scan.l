@@ -1,7 +1,5 @@
 %{ 
-    FILE * fonte;
-    FILE * tokens;
-    int lineno = 1;
+    #include "globals.h"
     enum {IF, ELSE, INT, RETURN, VOID, WHILE, PLUS, MINUS, TIMES, SLASH, LT, LE, GT, GE, DEQUAL, DIFFERENT, EQUAL, SEMICOLON, COMMA, LPAREN, RPAREN, LBRACKET, RBRACKET, RBRACE, LBRACE, NUM, ID, YYEOF, ERROR};
 %} 
 digit   [0-9] 
@@ -10,6 +8,7 @@ letter  [a-zA-Z]
 identifier  {letter}+ 
 newline \n 
 whitespace  [ \t]+ 
+%option noyywrap
 %% 
 
 “if”        {fprintf(tokens, "<if, IF>");return IF;};

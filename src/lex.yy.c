@@ -322,6 +322,9 @@ void yyfree ( void *  );
 #define YY_AT_BOL() (YY_CURRENT_BUFFER_LVALUE->yy_at_bol)
 
 /* Begin user sect3 */
+
+#define yywrap() (/*CONSTCOND*/1)
+#define YY_SKIP_YYWRAP
 typedef flex_uint8_t YY_CHAR;
 
 FILE *yyin = NULL, *yyout = NULL;
@@ -483,12 +486,10 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "scan.l"
 #line 2 "scan.l"
-    FILE * fonte;
-    FILE * tokens;
-    int lineno = 1;
+    #include "globals.h"
     enum {IF, ELSE, INT, RETURN, VOID, WHILE, PLUS, MINUS, TIMES, SLASH, LT, LE, GT, GE, DEQUAL, DIFFERENT, EQUAL, SEMICOLON, COMMA, LPAREN, RPAREN, LBRACKET, RBRACKET, RBRACE, LBRACE, NUM, ID, YYEOF, ERROR};
-#line 491 "lex.yy.c"
 #line 492 "lex.yy.c"
+#line 493 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -705,10 +706,10 @@ YY_DECL
 		}
 
 	{
-#line 13 "scan.l"
+#line 12 "scan.l"
 
 
-#line 712 "lex.yy.c"
+#line 713 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -767,161 +768,161 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 15 "scan.l"
+#line 14 "scan.l"
 {fprintf(tokens, "<if, IF>");return IF;};
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 16 "scan.l"
+#line 15 "scan.l"
 {fprintf(tokens, "<else, ELSE>");return ELSE;};
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 17 "scan.l"
+#line 16 "scan.l"
 {fprintf(tokens, "<int, INT>");return INT;};
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 18 "scan.l"
+#line 17 "scan.l"
 {fprintf(tokens, "<return, RETURN>");return RETURN;};
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 19 "scan.l"
+#line 18 "scan.l"
 {fprintf(tokens, "<void, VOID>");return VOID;};
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 20 "scan.l"
+#line 19 "scan.l"
 {fprintf(tokens, "<while, WHILE>");return WHILE;};
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 21 "scan.l"
+#line 20 "scan.l"
 {fprintf(tokens, "<+, PLUS>");return PLUS;};
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 22 "scan.l"
+#line 21 "scan.l"
 {fprintf(tokens, "<-, MINUS>");return MINUS;};
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 23 "scan.l"
+#line 22 "scan.l"
 {fprintf(tokens, "<*, TIMES>");return TIMES;};
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 24 "scan.l"
+#line 23 "scan.l"
 {fprintf(tokens, "</, SLASH>");return SLASH;};
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 25 "scan.l"
+#line 24 "scan.l"
 {fprintf(tokens, "<<, LT>");return LT;};
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 26 "scan.l"
+#line 25 "scan.l"
 {fprintf(tokens, "<<=, LE>");return LE;};
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 27 "scan.l"
+#line 26 "scan.l"
 {fprintf(tokens, "<>, GT>");return GT;};
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 28 "scan.l"
+#line 27 "scan.l"
 {fprintf(tokens, "<>=, GE>");return GE;};
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 29 "scan.l"
+#line 28 "scan.l"
 {fprintf(tokens, "<==, DEQUAL>");return DEQUAL;};
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 30 "scan.l"
+#line 29 "scan.l"
 {fprintf(tokens, "<!=, DIFFERENT>");return DIFFERENT;};
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 31 "scan.l"
+#line 30 "scan.l"
 {fprintf(tokens, "<=, EQUAL>");return EQUAL;};
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 32 "scan.l"
+#line 31 "scan.l"
 {fprintf(tokens, "<;, SEMICOLON>");return SEMICOLON;};
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 33 "scan.l"
+#line 32 "scan.l"
 {fprintf(tokens, "<,, COMMA>");return COMMA;};
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 34 "scan.l"
+#line 33 "scan.l"
 {fprintf(tokens, "<(, LPAREN>");return LPAREN;};
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 35 "scan.l"
+#line 34 "scan.l"
 {fprintf(tokens, "<), RPAREN>");return RPAREN;};
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 36 "scan.l"
+#line 35 "scan.l"
 {fprintf(tokens, "<[, LBRACKET>");return LBRACKET;};
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 37 "scan.l"
+#line 36 "scan.l"
 {fprintf(tokens, "<], RBRACKET>");return RBRACKET;};
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 38 "scan.l"
+#line 37 "scan.l"
 {fprintf(tokens, "<{, LBRACE>");return LBRACE;};
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 39 "scan.l"
+#line 38 "scan.l"
 {fprintf(tokens, "<}, RBRACE>");return RBRACE;};
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 40 "scan.l"
+#line 39 "scan.l"
 {fprintf(tokens, "<%s, NUM>", yytext);return NUM;}; 
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 41 "scan.l"
+#line 40 "scan.l"
 {fprintf(tokens, "<%s, ID>", yytext);return ID;};
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 42 "scan.l"
+#line 41 "scan.l"
 {fprintf(tokens, "\n");lineno++;};
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 43 "scan.l"
+#line 42 "scan.l"
 {fprintf(tokens, "%s", yytext);}; 
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 44 "scan.l"
+#line 43 "scan.l"
 {return ERROR;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 46 "scan.l"
+#line 45 "scan.l"
 ECHO;
 	YY_BREAK
-#line 925 "lex.yy.c"
+#line 926 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1926,7 +1927,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 46 "scan.l"
+#line 45 "scan.l"
 
 
 void main(int arcg, char ** argv){
