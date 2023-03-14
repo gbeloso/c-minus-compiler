@@ -1,6 +1,10 @@
 %{ 
     #include "util.h"
     #include "globals.h"
+    FILE * fonte;
+    FILE * tokens;
+    int lineno = 0;
+    char * lexema;
     enum {IF, ELSE, INT, RETURN, VOID, WHILE, PLUS, MINUS, TIMES, SLASH, LT, LE, GT, GE, DEQUAL, DIFFERENT, EQUAL, SEMICOLON, COMMA, LPAREN, RPAREN, LBRACKET, RBRACKET, RBRACE, LBRACE, NUM, ID, YYEOF, ERROR};
 %} 
 digit   [0-9] 
@@ -47,7 +51,7 @@ whitespace  [ \t]+
 
 void main(int arcg, char ** argv){
     int temp = 1;
-    fonte = fopen("exemplos/exemplo.c", "r");
+    fonte = fopen(argv[1], "r");
     tokens = fopen("saida/tokens.txt", "w");
     yyin = fonte;
     while(temp != 0){

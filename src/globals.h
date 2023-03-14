@@ -3,9 +3,9 @@
 
 #include <stdio.h>
 
-FILE * fonte;
-FILE * tokens;
-int lineno = 0;
-char * lexema;
+extern FILE * fonte;
+extern FILE * tokens;
+extern int lineno;
+extern char * lexema;
 
 #endif
