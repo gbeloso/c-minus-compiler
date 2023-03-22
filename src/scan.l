@@ -1,23 +1,23 @@
 %{ 
     #include "util.h"
     #include "globals.h"
+    #include "parser.tab.h"
     FILE * fonte;
     FILE * tokens;
-    int lineno = 0;
-    char * lexema;
-    enum {IF, ELSE, INT, RETURN, VOID, WHILE, PLUS, MINUS, TIMES, SLASH, LT, LE, GT, GE, DEQUAL, DIFFERENT, EQUAL, SEMICOLON, COMMA, LPAREN, RPAREN, LBRACKET, RBRACKET, RBRACE, LBRACE, NUM, ID, YYEOF, ERROR};
+    int lineno = 1;
 %} 
+
 digit   [0-9] 
 number  {digit}+ 
 letter  [a-zA-Z] 
 identifier  {letter}+ 
 newline \n 
-whitespace  [ \t]+ 
+whitespace  [ \t \r]+ 
 %option noyywrap
 %% 
 
-“if”        {fprintf(tokens, "<if, IF>");return IF;};
-“else”      {fprintf(tokens, "<else, ELSE>");return ELSE;};
+"if"        {fprintf(tokens, "<if, IF>");return IF;};
+"else"      {fprintf(tokens, "<else, ELSE>");return ELSE;};
 "int"       {fprintf(tokens, "<int, INT>");return INT;};
 "return"    {fprintf(tokens, "<return, RETURN>");return RETURN;};
 "void"      {fprintf(tokens, "<void, VOID>");return VOID;};
@@ -45,17 +45,16 @@ whitespace  [ \t]+
 {identifier}    {fprintf(tokens, "<%s, ID>", yytext);return ID;};
 {newline}       {fprintf(tokens, "\n");lineno++;};
 {whitespace}    {fprintf(tokens, "%s", yytext);}; 
-.               {return ERROR;}
+"/*"             { char c;
+                  while (1) {
+                    c = input();
+                    if (c == EOF) break;
+                    if (c == '\n') lineno++;
+                    while ((c = input()) == '*');
+                    if (c == '/') break;
+                  }
+                }
+.               {printf("Lexical error at line: %d.\n", lineno);printf("Current token: %s\n", yytext);return ERROR;}
 
 %% 
 
-void main(int arcg, char ** argv){
-    int temp = 1;
-    fonte = fopen(argv[1], "r");
-    tokens = fopen("saida/tokens.txt", "w");
-    yyin = fonte;
-    while(temp != 0){
-        temp = yylex();
-        printf("%d\n", temp);
-    }
-}

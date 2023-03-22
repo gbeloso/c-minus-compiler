@@ -2,8 +2,8 @@
 
 all:
 	flex --header-file=src/scan.h --outfile=src/scan.c src/scan.l
-	gcc -c src/util.c -o obj/util.o
-	gcc  src/scan.c obj/util.o -o obj/scan.o
+	bison -d src/parser.y -o src/parser.tab.c
+	gcc src/main.c src/scan.c src/util.c src/parser.tab.c -o obj/main.o
 
 run:
-	./obj/scan.o exemplos/exemplo.c
+	./obj/main.o exemplos/exemplo.c
