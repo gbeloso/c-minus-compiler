@@ -1,121 +1,32 @@
-Decl_Vetor: x 
-	Num: 10 
-Func: minloc 
-	ParamVetor: a 
-	Param: low 
-	Param: high 
-	Decl_var: i 
-	Decl_var: x 
-	Decl_var: k 
+Func: gcd int
+	Param: u int
+	Param: v int
+	if 
+		Op: == 
+			Var: v int
+			Num: 0 int
+		return 
+			Var: u int
+		return 
+			Ativacao: gcd 
+				Var: v int
+				Op: - 
+					Var: u int
+					Op: * 
+						Op: / 
+							Var: u int
+							Var: v int
+						Var: v int
+Func: main void
+	Decl_var: x int
+	Decl_var: y int
 	Op: = 
-		Var: k 
-		Var: low 
+		Var: x int
+		Ativacao: input 
 	Op: = 
-		Var: x 
-		Vetor: a 
-			Var: low 
-	Op: = 
-		Var: i 
-		Op: + 
-			Var: low 
-			Num: 1 
-	while 
-		Op: < 
-			Var: i 
-			Var: high 
-		if 
-			Op: < 
-				Vetor: a 
-					Var: i 
-				Var: x 
-			Op: = 
-				Var: x 
-				Vetor: a 
-					Var: i 
-			Op: = 
-				Var: k 
-				Var: i 
-		Op: = 
-			Var: i 
-			Op: + 
-				Var: i 
-				Num: 1 
-	return 
-		Var: k 
-Func: sort 
-	ParamVetor: a 
-	Param: low 
-	Param: high 
-	Decl_var: i 
-	Decl_var: k 
-	Op: = 
-		Var: i 
-		Var: low 
-	while 
-		Op: < 
-			Var: i 
-			Op: - 
-				Var: high 
-				Num: 1 
-		Decl_var: t 
-		Op: = 
-			Var: k 
-			Ativacao: minloc 
-				Var: a 
-				Var: i 
-				Var: high 
-		Op: = 
-			Var: t 
-			Vetor: a 
-				Var: k 
-		Op: = 
-			Vetor: a 
-				Var: k 
-			Vetor: a 
-				Var: i 
-		Op: = 
-			Vetor: a 
-				Var: i 
-			Var: t 
-		Op: = 
-			Var: i 
-			Op: + 
-				Var: i 
-				Num: 1 
-Func: main 
-	Decl_var: i 
-	Op: = 
-		Var: i 
-		Num: 0 
-	while 
-		Op: < 
-			Var: i 
-			Num: 10 
-		Op: = 
-			Vetor: x 
-				Var: i 
-			Ativacao: input 
-		Op: = 
-			Var: i 
-			Op: + 
-				Var: i 
-				Num: 1 
-	Ativacao: sort 
-		Var: x 
-		Num: 0 
-		Num: 10 
-	Op: = 
-		Var: i 
-		Num: 0 
-	while 
-		Op: < 
-			Var: i 
-			Num: 10 
-		Ativacao: output 
-			Vetor: x 
-				Var: i 
-		Op: = 
-			Var: i 
-			Op: + 
-				Var: i 
-				Num: 1 
+		Var: y int
+		Ativacao: input 
+	Ativacao: output 
+		Ativacao: gcd 
+			Var: x int
+			Var: y int

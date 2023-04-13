@@ -564,12 +564,12 @@ static const yytype_int8 yytranslate[] =
 static const yytype_int16 yyrline[] =
 {
        0,    23,    23,    25,    41,    43,    43,    45,    57,    57,
-      59,    75,    77,    87,    98,   112,   114,   123,   134,   141,
-     147,   154,   168,   170,   170,   170,   170,   170,   172,   188,
-     199,   215,   228,   228,   238,   238,   240,   252,   254,   268,
-     270,   276,   281,   286,   291,   296,   302,   315,   317,   323,
-     329,   342,   344,   350,   356,   357,   358,   359,   366,   373,
-     385,   392,   403,   403,   405,   419
+      59,    75,    77,    87,    98,   112,   114,   123,   134,   142,
+     148,   155,   169,   171,   171,   171,   171,   171,   173,   189,
+     200,   216,   229,   229,   239,   239,   241,   253,   255,   269,
+     271,   277,   282,   287,   292,   297,   303,   316,   318,   324,
+     330,   343,   345,   351,   357,   358,   359,   360,   362,   370,
+     383,   390,   401,   401,   403,   417
 };
 #endif
 
@@ -653,8 +653,8 @@ static const yytype_int8 yydefact[] =
 static const yytype_int8 yypgoto[] =
 {
      -60,   -60,   -60,    83,   -60,   -60,   -60,    68,   -60,    69,
-     -60,   -10,   -60,   -59,    70,   -60,   -60,   -60,   -60,   -39,
-     -60,   -60,    18,   -60,    20,   -60,    19,   -58,    -7,   -60,
+      76,   -10,   -60,   -59,    70,   -60,   -60,   -60,   -60,   -39,
+     -60,   -60,    21,   -60,    23,   -60,    18,   -58,    -7,   -60,
      -60,   -60
 };
 
@@ -662,7 +662,7 @@ static const yytype_int8 yypgoto[] =
 static const yytype_int8 yydefgoto[] =
 {
        0,     3,     4,     5,     6,    17,    18,    19,    32,     7,
-      22,     8,    36,    45,    46,    47,    48,    49,    50,    51,
+      44,     8,    36,    45,    46,    47,    48,    49,    50,    51,
       52,    73,    53,    74,    54,    77,    55,    56,    57,    58,
       91,    92
 };
@@ -673,15 +673,15 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int8 yytable[] =
 {
       61,    12,    13,    63,    20,    11,    15,    38,     9,    60,
-      39,    42,    40,    25,    20,    86,    86,    44,    11,    86,
+      39,    42,    40,    25,    20,    86,    86,    21,    11,    86,
       81,   -20,    35,    83,    41,    13,    42,    14,    37,    15,
-      43,    27,    44,    11,    21,    99,   100,    75,    76,    89,
+      43,    27,    21,    11,    21,    99,   100,    75,    76,    89,
       90,    93,    38,   103,    42,    39,     1,    40,     2,    24,
-      44,    11,     1,    79,    16,    80,    23,    26,   101,    41,
-      30,    42,    65,    66,    27,    31,    27,    44,    11,    65,
+      21,    11,     1,    79,    16,    80,    23,    26,   101,    41,
+      30,    42,    65,    66,    27,    31,    27,    21,    11,    65,
       66,    33,    59,    67,    68,    69,    70,    71,    72,    62,
       97,    64,    78,    98,    82,    84,   102,    10,    94,    95,
-      96,    85,    29,    28,    87,     0,    88,     0,     0,     0,
+      96,    22,    29,    28,    85,    88,     0,    87,     0,     0,
        0,    34
 };
 
@@ -696,7 +696,7 @@ static const yytype_int8 yycheck[] =
       24,    22,     9,    10,    27,    20,    27,    28,    29,     9,
       10,    25,    22,    13,    14,    15,    16,    17,    18,    22,
       21,    20,    19,    25,    20,    23,     4,     4,    23,    23,
-      23,    73,    24,    23,    74,    -1,    77,    -1,    -1,    -1,
+      23,    15,    24,    23,    73,    77,    -1,    74,    -1,    -1,
       -1,    32
 };
 
@@ -708,7 +708,7 @@ static const yytype_int8 yystos[] =
       34,    29,    59,    20,    22,    24,     7,    36,    37,    38,
       42,    28,    41,    23,    21,    59,    25,    27,    45,    38,
       24,    20,    39,    25,    40,    42,    43,    59,     3,     6,
-       8,    20,    22,    26,    28,    44,    45,    46,    47,    48,
+       8,    20,    22,    26,    41,    44,    45,    46,    47,    48,
       49,    50,    51,    53,    55,    57,    58,    59,    60,    22,
       20,    50,    22,    50,    20,     9,    10,    13,    14,    15,
       16,    17,    18,    52,    54,    11,    12,    56,    19,    22,
@@ -1389,35 +1389,36 @@ yyreduce:
     // cria o no NUM
     TreeNode * t;
     t = newNode(NUM, yytext, NumNode, lineno);
+    t->token = INT; 
     yyval = t;
 }
-#line 1395 "src/parser.tab.c"
+#line 1396 "src/parser.tab.c"
     break;
 
   case 19: /* tipo: INT  */
-#line 141 "src/parser.y"
+#line 142 "src/parser.y"
            {
         // cria o no auxiliar int;
         TreeNode * t;
         t = newNode(INT,"int",0, lineno);
         yyval = t;
 }
-#line 1406 "src/parser.tab.c"
+#line 1407 "src/parser.tab.c"
     break;
 
   case 20: /* tipo: VOID  */
-#line 147 "src/parser.y"
+#line 148 "src/parser.y"
           {
         // cria o no auxiliar void
         TreeNode * t;
         t = newNode(VOID,"void",0, lineno);
         yyval = t;
 }
-#line 1417 "src/parser.tab.c"
+#line 1418 "src/parser.tab.c"
     break;
 
   case 21: /* statement_lista: statement_lista statement  */
-#line 154 "src/parser.y"
+#line 155 "src/parser.y"
                                             {
                     // anexa o no statement como irmao do no statement_lista
                     TreeNode * t;
@@ -1433,47 +1434,47 @@ yyreduce:
                         yyval = yyvsp[-1];
                     }
 }
-#line 1437 "src/parser.tab.c"
+#line 1438 "src/parser.tab.c"
     break;
 
   case 22: /* statement_lista: %empty  */
-#line 168 "src/parser.y"
+#line 169 "src/parser.y"
     {yyval = NULL;}
-#line 1443 "src/parser.tab.c"
+#line 1444 "src/parser.tab.c"
     break;
 
   case 23: /* statement: exp_decl  */
-#line 170 "src/parser.y"
+#line 171 "src/parser.y"
                      {yyval = yyvsp[0];}
-#line 1449 "src/parser.tab.c"
+#line 1450 "src/parser.tab.c"
     break;
 
   case 24: /* statement: retorno_decl  */
-#line 170 "src/parser.y"
+#line 171 "src/parser.y"
                                                {yyval = yyvsp[0];}
-#line 1455 "src/parser.tab.c"
+#line 1456 "src/parser.tab.c"
     break;
 
   case 25: /* statement: iteracao_decl  */
-#line 170 "src/parser.y"
+#line 171 "src/parser.y"
                                                                           {yyval = yyvsp[0];}
-#line 1461 "src/parser.tab.c"
+#line 1462 "src/parser.tab.c"
     break;
 
   case 26: /* statement: selecao_decl  */
-#line 170 "src/parser.y"
+#line 171 "src/parser.y"
                                                                                                     {yyval = yyvsp[0];}
-#line 1467 "src/parser.tab.c"
+#line 1468 "src/parser.tab.c"
     break;
 
   case 27: /* statement: composto_decl  */
-#line 170 "src/parser.y"
+#line 171 "src/parser.y"
                                                                                                                                {yyval = yyvsp[0];}
-#line 1473 "src/parser.tab.c"
+#line 1474 "src/parser.tab.c"
     break;
 
   case 28: /* composto_decl: LBRACE local_decl statement_lista RBRACE  */
-#line 172 "src/parser.y"
+#line 173 "src/parser.y"
                                                          {
     //insere a statement lista como irmao da local_decl e reduz a um composto_decl
     TreeNode * t;
@@ -1489,11 +1490,11 @@ yyreduce:
         yyval = yyvsp[-2];
     }
 }
-#line 1493 "src/parser.tab.c"
+#line 1494 "src/parser.tab.c"
     break;
 
   case 29: /* selecao_decl: IF LPAREN exp RPAREN statement  */
-#line 188 "src/parser.y"
+#line 189 "src/parser.y"
                                              {
                 // cria o no do tipo if e aloca exp como filho a esquerda e statement como filho do meio
                 TreeNode * p;
@@ -1506,11 +1507,11 @@ yyreduce:
                 p->childM = fM;
                 yyval = p;
 }
-#line 1510 "src/parser.tab.c"
+#line 1511 "src/parser.tab.c"
     break;
 
   case 30: /* selecao_decl: IF LPAREN exp RPAREN statement ELSE statement  */
-#line 199 "src/parser.y"
+#line 200 "src/parser.y"
                                                  {
                 // cria o no do tipo if e aloca exp como filho a esquerda, statement como filho do meio e o statement do else como filho da direita
                 TreeNode * p;
@@ -1526,11 +1527,11 @@ yyreduce:
                 p->childR = fD;
                 yyval = p;
 }
-#line 1530 "src/parser.tab.c"
+#line 1531 "src/parser.tab.c"
     break;
 
   case 31: /* iteracao_decl: WHILE LPAREN exp RPAREN statement  */
-#line 215 "src/parser.y"
+#line 216 "src/parser.y"
                                                  {
                 // cria o no while e aloca exp como filho a esquerda e statement como filho do meio
                 TreeNode * p;
@@ -1543,17 +1544,17 @@ yyreduce:
                 p->childM = fM;
                 yyval = p;
 }
-#line 1547 "src/parser.tab.c"
+#line 1548 "src/parser.tab.c"
     break;
 
   case 32: /* retorno_decl: RETURN SEMICOLON  */
-#line 228 "src/parser.y"
+#line 229 "src/parser.y"
                                 {yyval = NULL;}
-#line 1553 "src/parser.tab.c"
+#line 1554 "src/parser.tab.c"
     break;
 
   case 33: /* retorno_decl: RETURN exp SEMICOLON  */
-#line 228 "src/parser.y"
+#line 229 "src/parser.y"
                                                                     {
                 // cria no do tipo return e aloca exp como filho a esquerda
                 TreeNode * p;
@@ -1563,23 +1564,23 @@ yyreduce:
                 p->childL = fE;
                 yyval = p;
 }
-#line 1567 "src/parser.tab.c"
+#line 1568 "src/parser.tab.c"
     break;
 
   case 34: /* exp_decl: exp SEMICOLON  */
-#line 238 "src/parser.y"
+#line 239 "src/parser.y"
                          {yyval = yyvsp[-1];}
-#line 1573 "src/parser.tab.c"
+#line 1574 "src/parser.tab.c"
     break;
 
   case 35: /* exp_decl: SEMICOLON  */
-#line 238 "src/parser.y"
+#line 239 "src/parser.y"
                                                 {yyval = NULL;}
-#line 1579 "src/parser.tab.c"
+#line 1580 "src/parser.tab.c"
     break;
 
   case 36: /* exp: var EQUAL exp  */
-#line 240 "src/parser.y"
+#line 241 "src/parser.y"
                    {
     // cria o no exp aloca var como filho a esquerda e exp como filho a direita
     TreeNode * p;
@@ -1592,17 +1593,17 @@ yyreduce:
     p->childM = fM;
     yyval = p;
 }
-#line 1596 "src/parser.tab.c"
+#line 1597 "src/parser.tab.c"
     break;
 
   case 37: /* exp: simples_exp  */
-#line 252 "src/parser.y"
+#line 253 "src/parser.y"
                   {yyval = yyvsp[0];}
-#line 1602 "src/parser.tab.c"
+#line 1603 "src/parser.tab.c"
     break;
 
   case 38: /* simples_exp: soma_exp relacional soma_exp  */
-#line 254 "src/parser.y"
+#line 255 "src/parser.y"
                                            {
     //cria o no simples_exp e atribui como filho da esquerda e direita um soma_exp
     TreeNode * t;
@@ -1617,78 +1618,78 @@ yyreduce:
     //destroi o no auxiliar relacional
     yyval = t;
 }
-#line 1621 "src/parser.tab.c"
+#line 1622 "src/parser.tab.c"
     break;
 
   case 39: /* simples_exp: soma_exp  */
-#line 268 "src/parser.y"
+#line 269 "src/parser.y"
                        {yyval = yyvsp[0];}
-#line 1627 "src/parser.tab.c"
+#line 1628 "src/parser.tab.c"
     break;
 
   case 40: /* relacional: LE  */
-#line 270 "src/parser.y"
+#line 271 "src/parser.y"
                 {
             // cria os nos auxiliares relacionas <= < > >= == !=
             TreeNode * t;
             t = newNode(LE, yytext, OpNode, lineno);
             yyval = t;
             }
-#line 1638 "src/parser.tab.c"
+#line 1639 "src/parser.tab.c"
     break;
 
   case 41: /* relacional: LT  */
-#line 276 "src/parser.y"
+#line 277 "src/parser.y"
                  {    
             TreeNode * t;
             t = newNode(LT, yytext, OpNode, lineno);
             yyval = t;
             }
-#line 1648 "src/parser.tab.c"
+#line 1649 "src/parser.tab.c"
     break;
 
   case 42: /* relacional: GT  */
-#line 281 "src/parser.y"
+#line 282 "src/parser.y"
                 {
             TreeNode * t;
             t = newNode(GT, yytext, OpNode, lineno);
             yyval = t;
             }
-#line 1658 "src/parser.tab.c"
+#line 1659 "src/parser.tab.c"
     break;
 
   case 43: /* relacional: GE  */
-#line 286 "src/parser.y"
+#line 287 "src/parser.y"
                  {
             TreeNode * t;
             t = newNode(GE, yytext, OpNode, lineno);
             yyval = t;
             }
-#line 1668 "src/parser.tab.c"
+#line 1669 "src/parser.tab.c"
     break;
 
   case 44: /* relacional: DEQUAL  */
-#line 291 "src/parser.y"
+#line 292 "src/parser.y"
                      {
             TreeNode * t;
             t = newNode(DEQUAL, yytext, OpNode, lineno);
             yyval = t;
             }
-#line 1678 "src/parser.tab.c"
+#line 1679 "src/parser.tab.c"
     break;
 
   case 45: /* relacional: DIFFERENT  */
-#line 296 "src/parser.y"
+#line 297 "src/parser.y"
                        {
             TreeNode * t;
             t = newNode(DIFFERENT, yytext, OpNode, lineno);
             yyval = t;
             }
-#line 1688 "src/parser.tab.c"
+#line 1689 "src/parser.tab.c"
     break;
 
   case 46: /* soma_exp: soma_exp soma termo  */
-#line 302 "src/parser.y"
+#line 303 "src/parser.y"
                                {
     //cria o no soma exp e atribui soma_exp como filho a esquerda e termo como filho a direita
     TreeNode * t;
@@ -1703,38 +1704,38 @@ yyreduce:
     //destroi o no auxiliar soma
     yyval = t;
 }
-#line 1707 "src/parser.tab.c"
+#line 1708 "src/parser.tab.c"
     break;
 
   case 47: /* soma_exp: termo  */
-#line 315 "src/parser.y"
+#line 316 "src/parser.y"
           {yyval = yyvsp[0];}
-#line 1713 "src/parser.tab.c"
+#line 1714 "src/parser.tab.c"
     break;
 
   case 48: /* soma: PLUS  */
-#line 317 "src/parser.y"
+#line 318 "src/parser.y"
             {
         //cria os nos auxiliares de soma e subtracao
         TreeNode * t;
         t = newNode(PLUS, yytext, OpNode, lineno);
         yyval = t;
 }
-#line 1724 "src/parser.tab.c"
+#line 1725 "src/parser.tab.c"
     break;
 
   case 49: /* soma: MINUS  */
-#line 323 "src/parser.y"
+#line 324 "src/parser.y"
            {
         TreeNode * t;
         t = newNode(MINUS, yytext, OpNode, lineno);
         yyval = t;
     }
-#line 1734 "src/parser.tab.c"
+#line 1735 "src/parser.tab.c"
     break;
 
   case 50: /* termo: termo mult fator  */
-#line 329 "src/parser.y"
+#line 330 "src/parser.y"
                         {
     //cria o no termo e atribui como filho a esquerda um termo e um fator como filho a direita
     TreeNode * t;
@@ -1749,80 +1750,76 @@ yyreduce:
     //destroi o no auxiliar mult
     yyval = t;
 }
-#line 1753 "src/parser.tab.c"
+#line 1754 "src/parser.tab.c"
     break;
 
   case 51: /* termo: fator  */
-#line 342 "src/parser.y"
+#line 343 "src/parser.y"
           {yyval = yyvsp[0];}
-#line 1759 "src/parser.tab.c"
+#line 1760 "src/parser.tab.c"
     break;
 
   case 52: /* mult: TIMES  */
-#line 344 "src/parser.y"
+#line 345 "src/parser.y"
             {
         // constroi os nos auxiliares de multiplicacao e divisao
         TreeNode * t;
         t = newNode(TIMES, yytext, OpNode, lineno);
         yyval = t;
 }
-#line 1770 "src/parser.tab.c"
+#line 1771 "src/parser.tab.c"
     break;
 
   case 53: /* mult: SLASH  */
-#line 350 "src/parser.y"
+#line 351 "src/parser.y"
            {
         TreeNode * t;
         t = newNode(SLASH, yytext, OpNode, lineno);
         yyval = t;
     }
-#line 1780 "src/parser.tab.c"
+#line 1781 "src/parser.tab.c"
     break;
 
   case 54: /* fator: LPAREN exp RPAREN  */
-#line 356 "src/parser.y"
+#line 357 "src/parser.y"
                           {yyval = yyvsp[-1];}
-#line 1786 "src/parser.tab.c"
+#line 1787 "src/parser.tab.c"
     break;
 
   case 55: /* fator: var  */
-#line 357 "src/parser.y"
+#line 358 "src/parser.y"
               {yyval = yyvsp[0];}
-#line 1792 "src/parser.tab.c"
+#line 1793 "src/parser.tab.c"
     break;
 
   case 56: /* fator: ativacao  */
-#line 358 "src/parser.y"
+#line 359 "src/parser.y"
                    {yyval = yyvsp[0];}
-#line 1798 "src/parser.tab.c"
+#line 1799 "src/parser.tab.c"
     break;
 
-  case 57: /* fator: NUM  */
-#line 359 "src/parser.y"
-               {
-            //cria o no auxiliar num
-            TreeNode *t;
-            t = newNode(NUM, yytext, NumNode, lineno);
-            yyval = t;
-        }
-#line 1809 "src/parser.tab.c"
+  case 57: /* fator: num  */
+#line 360 "src/parser.y"
+               {yyval = yyvsp[0];}
+#line 1805 "src/parser.tab.c"
     break;
 
   case 58: /* var: id  */
-#line 366 "src/parser.y"
+#line 362 "src/parser.y"
          {
     //cria o no do tipo var
     TreeNode *t;
     t = newNode(ID, yyvsp[0]->lexema, VarNode, yyvsp[0]->lineno);
     destroiNo(yyvsp[0]);
     //detroi o no auxiliar id
+    t->token = INT;
     yyval = t;
 }
-#line 1822 "src/parser.tab.c"
+#line 1819 "src/parser.tab.c"
     break;
 
   case 59: /* var: id LBRACKET exp RBRACKET  */
-#line 373 "src/parser.y"
+#line 370 "src/parser.y"
                               {
         // cria no do tipo vetor e atribui exp como filho a esquerda
         TreeNode *t;
@@ -1832,24 +1829,25 @@ yyreduce:
         t->childL = fE;
         destroiNo(yyvsp[-3]);
         // destroi no auxiliar id
+        t->token = INT;
         yyval = t;
 }
-#line 1838 "src/parser.tab.c"
+#line 1836 "src/parser.tab.c"
     break;
 
   case 60: /* id: ID  */
-#line 385 "src/parser.y"
+#line 383 "src/parser.y"
         {
         //cria o no auxiliar id
         TreeNode * t;
         t = newNode(ID, yytext, 0, lineno);
         yyval = t;
 }
-#line 1849 "src/parser.tab.c"
+#line 1847 "src/parser.tab.c"
     break;
 
   case 61: /* ativacao: id LPAREN args RPAREN  */
-#line 392 "src/parser.y"
+#line 390 "src/parser.y"
                                  {
     //cria o no ativacao e aloca args como filho a esquerda
     TreeNode *t;
@@ -1860,23 +1858,23 @@ yyreduce:
     t->childL = fE;
     yyval = t;
 }
-#line 1864 "src/parser.tab.c"
+#line 1862 "src/parser.tab.c"
     break;
 
   case 62: /* args: arg_lista  */
-#line 403 "src/parser.y"
+#line 401 "src/parser.y"
                  {yyval = yyvsp[0];}
-#line 1870 "src/parser.tab.c"
+#line 1868 "src/parser.tab.c"
     break;
 
   case 63: /* args: %empty  */
-#line 403 "src/parser.y"
+#line 401 "src/parser.y"
                               {yyval = NULL;}
-#line 1876 "src/parser.tab.c"
+#line 1874 "src/parser.tab.c"
     break;
 
   case 64: /* arg_lista: arg_lista COMMA exp  */
-#line 405 "src/parser.y"
+#line 403 "src/parser.y"
                                 {
     //aloca exp como um irmao de uma lista de argumentos
     TreeNode * t;
@@ -1892,17 +1890,17 @@ yyreduce:
         yyval = yyvsp[-2];
     }
 }
-#line 1896 "src/parser.tab.c"
+#line 1894 "src/parser.tab.c"
     break;
 
   case 65: /* arg_lista: exp  */
-#line 419 "src/parser.y"
+#line 417 "src/parser.y"
         {yyval = yyvsp[0];}
-#line 1902 "src/parser.tab.c"
+#line 1900 "src/parser.tab.c"
     break;
 
 
-#line 1906 "src/parser.tab.c"
+#line 1904 "src/parser.tab.c"
 
       default: break;
     }
@@ -2095,7 +2093,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 421 "src/parser.y"
+#line 419 "src/parser.y"
 
 
 int yyerror(char * message)

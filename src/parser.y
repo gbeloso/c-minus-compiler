@@ -135,6 +135,7 @@ num : NUM {
     // cria o no NUM
     TreeNode * t;
     t = newNode(NUM, yytext, NumNode, lineno);
+    t->token = INT; 
     $$ = t;
 };
 
@@ -356,12 +357,7 @@ mult: TIMES {
 fator : LPAREN exp RPAREN {$$ = $2;} 
         | var {$$ = $1;} 
         | ativacao {$$ = $1;} 
-        | NUM  {
-            //cria o no auxiliar num
-            TreeNode *t;
-            t = newNode(NUM, yytext, NumNode, lineno);
-            $$ = t;
-        };
+        | num  {$$ = $1;};
 
 var : id {
     //cria o no do tipo var
@@ -369,6 +365,7 @@ var : id {
     t = newNode(ID, $1->lexema, VarNode, $1->lineno);
     destroiNo($1);
     //detroi o no auxiliar id
+    t->token = INT;
     $$ = t;
 }   | id LBRACKET exp RBRACKET{
         // cria no do tipo vetor e atribui exp como filho a esquerda
@@ -379,6 +376,7 @@ var : id {
         t->childL = fE;
         destroiNo($1);
         // destroi no auxiliar id
+        t->token = INT;
         $$ = t;
 };
 

@@ -1,5 +1,6 @@
 #include "util.h"
 #include "globals.h"
+#include "parser.tab.h"
 
 char * copiaString(char * palavra){
     int n;
@@ -70,7 +71,16 @@ void printTree(TreeNode * t, int n){ //funcao para printar a arvore em modo iden
         else if(t->tipo == VetorNode){
             fprintf(arvore, "Vetor: ");
         }
-        fprintf(arvore, "%s \n", t->lexema);
+        fprintf(arvore, "%s ", t->lexema);
+        if(t->token == INT){
+           fprintf(arvore, "int\n");
+        }
+        else if(t->token == VOID){
+            fprintf(arvore, "void\n");
+        }
+        else{
+            fprintf(arvore, "\n");
+        }
         if(t->childL != NULL)
             printTree(t->childL, n+1);
         if(t->childM != NULL)
