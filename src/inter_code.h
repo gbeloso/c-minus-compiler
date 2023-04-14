@@ -4,4 +4,3 @@ void deleta_inst(Tinst * inst, Tquadruplas * quadrupla);
 Tno * busca_op(char * op, Tinst * inicio);
 void imprimeQuadruplas(Tquadruplas * quadrupla);
 char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla);
-char * concat(char * str0, char * str1);

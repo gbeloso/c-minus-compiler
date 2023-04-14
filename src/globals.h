@@ -22,6 +22,7 @@ typedef struct no
     char * lexema;
     char * escopo;
     int tipo;
+    int reg;
     struct no * proximo;
 }Tno; //no da tabela hash
 

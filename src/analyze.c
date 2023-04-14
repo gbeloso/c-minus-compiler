@@ -1,4 +1,4 @@
-	#include "globals.h"
+#include "globals.h"
 #include "util.h"
 #include "analyze.h"
 #include "symtab.h"
