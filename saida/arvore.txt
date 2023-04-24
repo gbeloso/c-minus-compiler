@@ -1,32 +1,121 @@
-Func: gcd int
-	Param: u int
-	Param: v int
-	if 
-		Op: == 
-			Var: v int
-			Num: 0 int
-		return 
-			Var: u int
-		return 
-			Ativacao: gcd 
-				Var: v int
-				Op: - 
-					Var: u int
-					Op: * 
-						Op: / 
-							Var: u int
-							Var: v int
-						Var: v int
+Decl_Vetor: x int
+	Num: 10 int
+Func: minloc int
+	ParamVetor: a int
+	Param: low int
+	Param: high int
+	Decl_var: i int
+	Decl_var: j int
+	Decl_var: k int
+	Op: = 
+		Var: k int
+		Var: low int
+	Op: = 
+		Var: j int
+		Vetor: a int
+			Var: low int
+	Op: = 
+		Var: i int
+		Op: + 
+			Var: low int
+			Num: 1 int
+	while 
+		Op: < 
+			Var: i int
+			Var: high int
+		if 
+			Op: < 
+				Vetor: a int
+					Var: i int
+				Var: j int
+			Op: = 
+				Var: j int
+				Vetor: a int
+					Var: i int
+			Op: = 
+				Var: k int
+				Var: i int
+		Op: = 
+			Var: i int
+			Op: + 
+				Var: i int
+				Num: 1 int
+	return 
+		Var: k int
+Func: sort void
+	ParamVetor: a int
+	Param: low int
+	Param: high int
+	Decl_var: i int
+	Decl_var: k int
+	Op: = 
+		Var: i int
+		Var: low int
+	while 
+		Op: < 
+			Var: i int
+			Op: - 
+				Var: high int
+				Num: 1 int
+		Decl_var: t int
+		Op: = 
+			Var: k int
+			Ativacao: minloc 
+				Var: a int
+				Var: i int
+				Var: high int
+		Op: = 
+			Var: t int
+			Vetor: a int
+				Var: k int
+		Op: = 
+			Vetor: a int
+				Var: k int
+			Vetor: a int
+				Var: i int
+		Op: = 
+			Vetor: a int
+				Var: i int
+			Var: t int
+		Op: = 
+			Var: i int
+			Op: + 
+				Var: i int
+				Num: 1 int
 Func: main void
-	Decl_var: x int
-	Decl_var: y int
+	Decl_var: i int
 	Op: = 
+		Var: i int
+		Num: 0 int
+	while 
+		Op: < 
+			Var: i int
+			Num: 10 int
+		Op: = 
+			Vetor: x int
+				Var: i int
+			Ativacao: input 
+		Op: = 
+			Var: i int
+			Op: + 
+				Var: i int
+				Num: 1 int
+	Ativacao: sort 
 		Var: x int
-		Ativacao: input 
+		Num: 0 int
+		Num: 10 int
 	Op: = 
-		Var: y int
-		Ativacao: input 
-	Ativacao: output 
-		Ativacao: gcd 
-			Var: x int
-			Var: y int
+		Var: i int
+		Num: 0 int
+	while 
+		Op: < 
+			Var: i int
+			Num: 10 int
+		Ativacao: output 
+			Vetor: x int
+				Var: i int
+		Op: = 
+			Var: i int
+			Op: + 
+				Var: i int
+				Num: 1 int

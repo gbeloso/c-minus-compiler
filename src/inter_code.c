@@ -49,12 +49,10 @@ Tno * busca_op(char * op, Tinst * inicio){
 
 void imprimeQuadruplas(Tquadruplas * quadrupla){
 	Tinst * aux;
-	int i = 1;
 	aux = quadrupla->inicio;
 	while(aux != NULL){
-		fprintf(intercode, "%d | (%s, %s, %s, %s)\n", i, aux->instrucao, aux->op1, aux->op2, aux->res);
+		fprintf(intercode, "(%s, %s, %s, %s)\n", aux->instrucao, aux->op1, aux->op2, aux->res);
 		aux = aux->proximo;
-		i++;
 	}
 } 
 
@@ -87,66 +85,103 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 				insere_inst("HALT", "-", "-", "-", quadrupla);
 			}
 		}
-		else if(t->tipo == ParamNode){
+		else if(t->tipo == ParamNode || t->tipo == VetorParamNode){
 			insere_inst("ARG", "INT", t->lexema, func_atual, quadrupla);
 			generateInterCode(t->sibling, quadrupla);
-			op1 = (char * ) malloc(sizeof(char)*10);
-			sprintf(op1, "R%d", cont_reg);
-			cont_reg++;
+			op1 = atribuiReg();
 			insere_inst("LOAD", op1, t->lexema, "-", quadrupla);
 		}
 		else if(t->tipo == IfNode){
-			op1 = generateInterCode(t->childL, quadrupla);
-			op2 = (char * ) malloc(sizeof(char)*10);
-			sprintf(op2, "L%d", cont_label);
-			cont_label++;
-			insere_inst("IFF", op1, op2, "-", quadrupla);
-			op3 = generateInterCode(t->childM, quadrupla);
-			sprintf(op3, "L%d", cont_label);
-			cont_label++;
-			insere_inst("GOTO", op3, "-", "-", quadrupla);
-			insere_inst("LAB", op2, "-", "-", quadrupla);
-			op1 = generateInterCode(t->childR, quadrupla);
-			insere_inst("GOTO", op3, "-", "-", quadrupla);
-			insere_inst("LAB", op3, "-", "-", quadrupla);
+			TreeNode * aux;
+			if(t->childR != NULL){
+				op1 = generateInterCode(t->childL, quadrupla);
+				op2 = criaLabel();
+				op3 = criaLabel();
+				insere_inst("IFF", op1, op2, "-", quadrupla);
+				aux = t->childM;
+				while(aux != NULL){
+					generateInterCode(aux, quadrupla);
+					aux = aux->sibling;
+				}
+				insere_inst("GOTO", op3, "-", "-", quadrupla);
+				insere_inst("LAB", op2, "-", "-", quadrupla);
+				aux = t->childR;
+				while(aux != NULL){
+					generateInterCode(aux, quadrupla);
+					aux = aux->sibling;
+				}
+				insere_inst("LAB", op3, "-", "-", quadrupla);
+			}
+			else{
+				op1 = generateInterCode(t->childL, quadrupla);
+				op2 = criaLabel();
+				insere_inst("IFF", op1, op2, "-", quadrupla);
+				aux = t->childM;
+				while(aux != NULL){
+					generateInterCode(aux, quadrupla);
+					aux = aux->sibling;
+				}
+				generateInterCode(t->childM, quadrupla);
+				insere_inst("LAB", op2, "-", "-", quadrupla);
+			}
+			
 		}
 		else if(t->tipo == OpNode){
 			op1 = generateInterCode(t->childL, quadrupla);
 			op2 = generateInterCode(t->childM, quadrupla);
 			if(t->token == DEQUAL){
-				op3 = (char * ) malloc(sizeof(char)*10);
-				sprintf(op3, "R%d", cont_reg);
-				cont_reg++;
+				op3 = atribuiReg();
 				insere_inst("EQUAL", op1, op2, op3, quadrupla);
 			}
 			else if(t->token == EQUAL){
 				insere_inst("ASSIGN", op1, op2, "-", quadrupla);
-				insere_inst("STORE", t->childL->lexema, op1, "-", quadrupla);
+				if(t->childL->tipo == VarNode){
+					insere_inst("STORE", op1, t->childL->lexema, "-", quadrupla);
+				}
+				else if(t->childL->tipo == VetorNode){
+					insere_inst("ASSIGN", op1, op2, "-", quadrupla);
+					op3 = generateInterCode(t->childL->childL, quadrupla);
+					op2 = atribuiReg();
+					insere_inst("MULT", op3, "4", op2, quadrupla);
+					insere_inst("STORE", op1, t->childL->lexema, op2, quadrupla);
+				}
 				return op1;
 			}
 			else if(t->token == PLUS){
-				op3 = (char * ) malloc(sizeof(char)*10);
-				sprintf(op3, "R%d", cont_reg);
-				cont_reg++;
+				op3 = atribuiReg();
 				insere_inst("ADD", op1, op2, op3, quadrupla);	
 			}
 			else if(t->token == MINUS){
-				op3 = (char * ) malloc(sizeof(char)*10);
-				sprintf(op3, "R%d", cont_reg);
-				cont_reg++;
+				op3 = atribuiReg();
 				insere_inst("SUB", op1, op2, op3, quadrupla);		
 			}
 			else if(t->token == TIMES){
-				op3 = (char * ) malloc(sizeof(char)*10);
-				sprintf(op3, "R%d", cont_reg);
-				cont_reg++;
+				op3 = atribuiReg();
 				insere_inst("MULT", op1, op2, op3, quadrupla);		
 			}
 			else if(t->token == SLASH){
-				op3 = (char * ) malloc(sizeof(char)*10);
-				sprintf(op3, "R%d", cont_reg);
-				cont_reg++;
+				op3 = atribuiReg();
 				insere_inst("DIV", op1, op2, op3, quadrupla);		
+			}
+			else if(t->token == LT){
+				op3 = atribuiReg();
+				insere_inst("SLT", op1, op2, op3, quadrupla);	
+			}
+			else if(t->token == GT){
+				op3 = atribuiReg();
+				insere_inst("SGT", op1, op2, op3, quadrupla);	
+			}
+			else if(t->token == LE){
+				op3 = atribuiReg();
+				insere_inst("SLE", op1, op2, op3, quadrupla);	
+			}
+			else if(t->token == GE){
+				op3 = atribuiReg();
+				insere_inst("SGE", op1, op2, op3, quadrupla);	
+			}
+			else if(t->token == DIFFERENT){
+				op3 = atribuiReg();
+				insere_inst("SDT", op1, op2, op3, quadrupla);	
 			}
 			return op3;
 		}
@@ -154,9 +189,7 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 			return(t->lexema);
 		}
 		else if(t->tipo == VarNode){
-			op1 = (char * ) malloc(sizeof(char)*10);
-			sprintf(op1, "R%d", cont_reg);
-			cont_reg++;
+			op1 = atribuiReg();
 			insere_inst("LOAD", op1, t->lexema, "-", quadrupla);
 			return op1;	
 		}
@@ -177,14 +210,67 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 			}
 			op2 = (char * ) malloc(sizeof(char)*10);
 			sprintf(op2, "%d", cont);
-			op3 = (char * ) malloc(sizeof(char)*10);
-			sprintf(op3, "R%d", cont_reg);
-			cont_reg++;
+			op3 = atribuiReg();
 			insere_inst("CALL", t->lexema, op2, op3, quadrupla);
 			return(op3);
 		}
 		else if(t->tipo == Decl_varNode){
 			insere_inst("ALLOC", t->lexema, func_atual, "-", quadrupla);
+			if(strcmp(func_atual, "global") == 0){
+				generateInterCode(t->sibling, quadrupla);
+			}
+		}
+		else if(t->tipo == Decl_vetorNode){
+			op3 = generateInterCode(t->childL, quadrupla);
+			insere_inst("ALLOC", t->lexema, func_atual, op3, quadrupla);
+			if(strcmp(func_atual, "global") == 0){
+				generateInterCode(t->sibling, quadrupla);
+			}
+		}
+		else if(t->tipo == VetorNode){
+			op1 = atribuiReg();
+			op2 = generateInterCode(t->childL, quadrupla);
+			op3 = atribuiReg();
+			insere_inst("MULT", op2, "4", op3, quadrupla);
+			insere_inst("LOAD", op1, t->lexema, op3, quadrupla);
+			return op1;
+		}
+		else if(t->tipo == WhileNode){
+			TreeNode * aux;
+			op2 = criaLabel();
+			op3 = criaLabel();
+			insere_inst("LAB", op2, "-", "-", quadrupla);
+			op1 = generateInterCode(t->childL, quadrupla);
+			insere_inst("IFF", op1, op3, "-", quadrupla);
+			aux = t->childM;
+			while(aux != NULL){
+				generateInterCode(aux, quadrupla);
+				aux = aux->sibling;
+			}
+			insere_inst("GOTO", op2, "-", "-", quadrupla);
+			insere_inst("LAB", op3, "-", "-", quadrupla);
+		}
+		else{
+			return NULL;
 		}
 	}
 }
+
+
+char * atribuiReg(){
+	char * temp;
+	temp = (char *) malloc(10*(sizeof(char)));
+	sprintf(temp, "R%d", cont_reg);
+	cont_reg++;
+	return temp;
+}
+
+char * criaLabel(){
+	char * temp;
+	temp = (char *) malloc(10*(sizeof(char)));
+	sprintf(temp, "L%d", cont_label);
+	cont_label++;
+	return temp;
+}
+
+// analise semantica vetor arrumar
