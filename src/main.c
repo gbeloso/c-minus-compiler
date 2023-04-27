@@ -23,13 +23,13 @@ void main(int arcg, char ** argv){
         tabela[i] = criaLista();
     }
     temp = hash("input", "global");
-    insere(0, "input", "global", INT, tabela[temp]);
+    insere(0, "input", "global", INT, FunNode, tabela[temp]);
     temp = hash("output", "global");
-    insere(0, "output", "global", VOID, tabela[temp]);
+    insere(0, "output", "global", VOID, FunNode, tabela[temp]);
     analyze(savedTree);
     temp = hash("main", "global");
-    if(buscar("main", "global", tabela[temp]->inicio) == NULL){
-        semantic_error(0);
+    if(buscar("main", "global", FunNode, tabela[temp]->inicio) == NULL){
+        semantic_error(0, "main");
     }
     for (i = 0; i < 211; i++){
         if(tabela[i]->inicio != NULL){

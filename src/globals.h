@@ -21,8 +21,8 @@ typedef struct no
     int linhas;
     char * lexema;
     char * escopo;
-    int tipo;
-    int reg;
+    int tipo_id;
+    int tipo_node;
     struct no * proximo;
 }Tno; //no da tabela hash
 
@@ -46,6 +46,20 @@ typedef struct quadruplas
     Tinst * inicio;
     int tam;
 }Tquadruplas; //lista de quadruplas
+
+typedef struct celula
+{
+    char * var;
+    char * escopo;
+    int reg;
+    struct celula * proximo;
+}Tcelula;
+
+typedef struct regs
+{
+    Tcelula * inicio;
+    int tam;
+}Tregs;
 
 extern FILE * fonte;
 extern FILE * arvore;

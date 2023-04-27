@@ -10,12 +10,61 @@ int cont_label = 0;
 FILE * intercode;
 char * func_atual = "global";
 
+Tregs * criaRegs(){
+	Tregs * regs;
+	regs = (Tregs*)malloc(sizeof(Tregs));
+	regs->inicio = NULL;
+	regs->tam = 0;
+	return regs;
+}
+
+Tregs * registradores;
+
 Tquadruplas * criaQuadrupla(){
 	Tquadruplas * quadrupla;
 	quadrupla = (Tquadruplas * )malloc(sizeof(Tquadruplas));
 	quadrupla->inicio = NULL;
 	quadrupla->tam = 0;
 	return quadrupla;
+}
+
+void insere_reg(char * var, char * escopo, int reg){
+	Tcelula * registrador;
+	Tcelula * aux;
+	registrador = (Tcelula*)malloc(sizeof(Tcelula));
+	registrador->var = copiaString(var);
+	registrador->escopo = copiaString(escopo);
+	registrador->reg = reg;
+	if(registradores->inicio == NULL){
+		registradores->inicio = registrador;
+		registradores->tam = registradores->tam + 1;
+	}
+	else{
+		aux = registradores->inicio;
+		while(aux->proximo != NULL){
+			aux = aux->proximo;
+		}
+		aux->proximo = registrador;
+		registradores->tam = registradores->tam + 1;
+	}
+}
+
+int busca_reg(char * var, char * escopo){
+	if(registradores->inicio == NULL){
+		return -1;
+	}
+	else{
+		Tcelula * aux;
+		aux = registradores->inicio;
+		while(aux->proximo != NULL){
+			int t0 = strcmp(var, aux->var);
+			int t1 = strcmp(escopo, aux->escopo);
+			if(t0 == 0 && t1 == 0){
+				return(aux->reg);
+			}
+		}
+		return -1;
+	}
 }
 
 void insere_inst(char * instrucao, char * op1, char * op2, char * res, Tquadruplas * quadrupla){
@@ -37,14 +86,6 @@ void insere_inst(char * instrucao, char * op1, char * op2, char * res, Tquadrupl
 		aux->proximo = inst;
 		quadrupla->tam = quadrupla->tam + 1;
 	}
-}
-
-void deleta_inst(Tinst * inst, Tquadruplas * quadrupla){
-
-}
-
-Tno * busca_op(char * op, Tinst * inicio){
-
 }
 
 void imprimeQuadruplas(Tquadruplas * quadrupla){
@@ -88,7 +129,7 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 		else if(t->tipo == ParamNode || t->tipo == VetorParamNode){
 			insere_inst("ARG", "INT", t->lexema, func_atual, quadrupla);
 			generateInterCode(t->sibling, quadrupla);
-			op1 = atribuiReg();
+			op1 = atribuiReg(t->lexema, func_atual);
 			insere_inst("LOAD", op1, t->lexema, "-", quadrupla);
 		}
 		else if(t->tipo == IfNode){
@@ -257,12 +298,40 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 }
 
 
-char * atribuiReg(){
+char * atribuiReg(char * var, char * escopo){
 	char * temp;
-	temp = (char *) malloc(10*(sizeof(char)));
-	sprintf(temp, "R%d", cont_reg);
-	cont_reg++;
-	return temp;
+	temp = (char *)malloc(sizeof(char)*10);
+	if(registradores == NULL){
+		registradores = criaRegs();
+		insere_reg(var, escopo, cont_reg);
+		sprintf(temp, "R%d", cont_reg);
+		cont_reg++;
+		return(temp);
+	}
+	else{
+		if(registradores->inicio == NULL){
+			insere_reg(var, escopo, cont_reg);
+			sprintf(temp, "R%d", cont_reg);
+			cont_reg++;
+			return(temp);
+		}
+		else{
+			Tcelula * aux;
+			aux = registradores->inicio;
+			while(aux->proximo != NULL){
+				int t0 = strcmp(var, aux->var);
+				int t1 = strcmp(escopo, aux->escopo);
+				if(t0 == 0 && t1 == 0){
+					sprintf(temp, "R%d", aux->reg);
+					return(temp);
+				}
+			}
+			insere_reg(var, escopo, cont_reg);
+			sprintf(temp, "R%d", cont_reg);
+			cont_reg++;
+			return(temp);
+		}
+	}
 }
 
 char * criaLabel(){
