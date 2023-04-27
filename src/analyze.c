@@ -18,50 +18,50 @@ void analyze(TreeNode * t){
 	else{
 		if(t->tipo == FunNode){
 			n = hash(t->lexema, escopo);
-			if(buscar(t->lexema, escopo, tabela[n]->inicio) == NULL){
-				insere(t->lineno, t->lexema, escopo, t->token, tabela[n]);
+			if(buscar(t->lexema, escopo, t->tipo, tabela[n]->inicio) == NULL){
+				insere(t->lineno, t->lexema, escopo, t->token, t->tipo, tabela[n]);
 			}
 			else{
-				semantic_error(t->lineno);
+				semantic_error(t->lineno, t->lexema);
 			}
 			escopo = copiaString(t->lexema);
 		}
 		else if ((t->tipo == VarNode) || (t->tipo == VetorNode)){
 			n = hash(t->lexema, "global");
-			if(buscar(t->lexema, "global", tabela[n]->inicio) == NULL){
+			if(buscar(t->lexema, "global", t->tipo, tabela[n]->inicio) == NULL){
 				n = hash(t->lexema, escopo);
-				if(buscar(t->lexema, escopo, tabela[n]->inicio) == NULL){
-					semantic_error(t->lineno);
+				if(buscar(t->lexema, escopo, t->tipo, tabela[n]->inicio) == NULL){
+					semantic_error(t->lineno, t->lexema);
 				}
 				else{
-					insere(t->lineno, t->lexema, escopo, t->token, tabela[n]);
+					insere(t->lineno, t->lexema, escopo, t->token, t->tipo, tabela[n]);
 				}
 			}
 			else{
-				insere(t->lineno, t->lexema, escopo, t->token, tabela[n]);
+				insere(t->lineno, t->lexema, escopo, t->token, t->tipo, tabela[n]);
 			}
 		}
 		else if((t->tipo == Decl_varNode) || (t->tipo == Decl_vetorNode) || (t->tipo == VetorParamNode) || (t->tipo == ParamNode)){
 			if(t->token == VOID){
-				semantic_error(t->lineno);
+				semantic_error(t->lineno, t->lexema);
 			}
 			n = hash(t->lexema, "global");
-			if(buscar(t->lexema, "global", tabela[n]->inicio) == NULL){
+			if(buscar(t->lexema, "global", t->tipo, tabela[n]->inicio) == NULL){
 				n = hash(t->lexema, escopo);
-				if(buscar(t->lexema, escopo, tabela[n]->inicio) == NULL){
-					insere(t->lineno, t->lexema, escopo, t->token, tabela[n]);		
+				if(buscar(t->lexema, escopo, t->tipo, tabela[n]->inicio) == NULL){
+					insere(t->lineno, t->lexema, escopo, t->token, t->tipo, tabela[n]);		
 				}
 				else{
-					semantic_error(t->lineno);
+					semantic_error(t->lineno, t->lexema);
 				}
 			}
 			else{
-				semantic_error(t->lineno);
+				semantic_error(t->lineno, t->lexema);
 			}
 		}
 		else if(t->tipo == OpNode){
 			if(verificaTipo(t) == -1){
-				semantic_error(t->lineno);
+				semantic_error(t->lineno, t->lexema);
 			}
 		}
 		analyze(t->childL);
@@ -76,12 +76,12 @@ void analyze(TreeNode * t){
 
 }
 
-void semantic_error(int linha){
+void semantic_error(int linha, char * lexema){
 	if(linha == 0){
 		printf("semantic error: missing main function\n");
 	}
 	else{
-		printf("semantic error at line %d.\n", linha);
+		printf("semantic error at line %d, current token: %s.\n", linha, lexema);
 	}
 	int p_id = getpid();
 	kill(p_id, SIGKILL);
@@ -108,12 +108,12 @@ int verificaTipo(TreeNode * t){
 	}
 	else if(t->tipo == AtivNode){
 		n = hash(t->lexema, "global");
-		aux = buscar(t->lexema, "global", tabela[n]->inicio);
+		aux = buscar(t->lexema, "global", t->tipo, tabela[n]->inicio);
 		if(aux == NULL){
 			return -1;
 		}
 		else{
-			return aux->tipo;
+			return aux->tipo_id;
 		}
 	}
 }

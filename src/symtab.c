@@ -16,14 +16,15 @@ Tlista * criaLista()
     return aux;
 }
 
-void insere(int linhas, char * lexema, char * escopo, int tipo, Tlista * linha)
+void insere(int linhas, char * lexema, char * escopo, int tipo_id, int tipo_node, Tlista * linha)
 {
     Tno * no;
     no = (Tno*) malloc(sizeof(Tno));
     no->linhas = linhas;
     no->lexema = copiaString(lexema);
     no->escopo = copiaString(escopo);
-    no->tipo = tipo;
+    no->tipo_id = tipo_id;
+    no->tipo_node = tipo_node;
     no->proximo = NULL;
     if (linha->inicio == NULL)
     {
@@ -67,13 +68,13 @@ void deleta(Tno * no, Tlista * linha)
     }
 }
 
-Tno * buscar(char * lexema, char * escopo, Tno * inicio)
+Tno * buscar(char * lexema, char * escopo, int tipo_node, Tno * inicio)
 {
     while (inicio != NULL)
     {
     	int t0 = strcmp(inicio->lexema, lexema);
     	int t1 = strcmp(inicio->escopo, escopo);
-        if ((t0 == 0)&&(t1 == 0))
+        if ((t0 == 0)&&(t1 == 0) /*&& (verificaTipoNode(inicio->tipo_node, tipo_node) == 0)*/)
         {
             return inicio;
         }
@@ -94,10 +95,10 @@ void imprime(Tlista * linha)
         while (aux != NULL)
         {
             fprintf(saidaTabela, " lexema: %s, escopo: %s ", aux->lexema, aux->escopo);
-            if(aux->tipo == VOID){
+            if(aux->tipo_id == VOID){
             	fprintf(saidaTabela, "tipo: VOID, linha: %d -> ", aux->linhas);
             }
-            else if(aux->tipo == INT){
+            else if(aux->tipo_id == INT){
             	fprintf(saidaTabela, "tipo: INT, linha: %d -> ", aux->linhas);
             }
             aux = aux->proximo;
@@ -121,3 +122,20 @@ int hash(char * nome, char * escopo)
     return(temp);
 }
 
+int verificaTipoNode(int t1, int t2){
+    if(t1 == t2){
+        return 0;
+    }
+    else if((t1 == Decl_varNode && t2 == VarNode)||(t1 == ParamNode && t2 == VarNode)){
+        return 0;
+    }
+    else if((t1 == Decl_vetorNode && t2 == VetorNode)||(t1 == VetorParamNode && t2 == VetorNode)){
+        return 0;
+    }
+    else if(t1 == FunNode && t2 == AtivNode){
+        return 0;
+    }
+    else{
+        return -1;
+    }
+}
