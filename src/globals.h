@@ -58,6 +58,7 @@ typedef struct celula
 typedef struct regs
 {
     Tcelula * inicio;
+    Tcelula * fim;
     int tam;
 }Tregs;
 
@@ -71,6 +72,7 @@ extern TreeNode * savedTree;
 extern char * escopo;
 extern Tlista * tabela[211];
 extern FILE * saidaTabela;
+extern Tregs * registradores;
 //extern static TreeNode * savedTree;
 
 #endif

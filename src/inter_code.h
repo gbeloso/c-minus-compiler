@@ -7,4 +7,6 @@ char * atribuiReg(char * var, char * escopo);
 Tregs * criaRegs();
 int busca_reg(char * var, char * escopo);
 void insere_reg(char * var, char * escopo, int reg);
-Tregs * criaRegs();
+int reg_is_free(int reg);
+void limpa_regs(void);
+void remove_reg(Tcelula * registro);

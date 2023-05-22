@@ -5,20 +5,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_REGS 32
+
 int cont_reg = 0;
 int cont_label = 0;
 FILE * intercode;
 char * func_atual = "global";
 
+Tregs * registradores;
+
 Tregs * criaRegs(){
 	Tregs * regs;
 	regs = (Tregs*)malloc(sizeof(Tregs));
 	regs->inicio = NULL;
+	regs->fim = NULL;
 	regs->tam = 0;
 	return regs;
 }
-
-Tregs * registradores;
 
 Tquadruplas * criaQuadrupla(){
 	Tquadruplas * quadrupla;
@@ -26,45 +29,6 @@ Tquadruplas * criaQuadrupla(){
 	quadrupla->inicio = NULL;
 	quadrupla->tam = 0;
 	return quadrupla;
-}
-
-void insere_reg(char * var, char * escopo, int reg){
-	Tcelula * registrador;
-	Tcelula * aux;
-	registrador = (Tcelula*)malloc(sizeof(Tcelula));
-	registrador->var = copiaString(var);
-	registrador->escopo = copiaString(escopo);
-	registrador->reg = reg;
-	if(registradores->inicio == NULL){
-		registradores->inicio = registrador;
-		registradores->tam = registradores->tam + 1;
-	}
-	else{
-		aux = registradores->inicio;
-		while(aux->proximo != NULL){
-			aux = aux->proximo;
-		}
-		aux->proximo = registrador;
-		registradores->tam = registradores->tam + 1;
-	}
-}
-
-int busca_reg(char * var, char * escopo){
-	if(registradores->inicio == NULL){
-		return -1;
-	}
-	else{
-		Tcelula * aux;
-		aux = registradores->inicio;
-		while(aux->proximo != NULL){
-			int t0 = strcmp(var, aux->var);
-			int t1 = strcmp(escopo, aux->escopo);
-			if(t0 == 0 && t1 == 0){
-				return(aux->reg);
-			}
-		}
-		return -1;
-	}
 }
 
 void insere_inst(char * instrucao, char * op1, char * op2, char * res, Tquadruplas * quadrupla){
@@ -113,7 +77,11 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 				op1 = copiaString("VOID");
 			}
 			insere_inst("FUN", op1, t->lexema, "-", quadrupla);
-			generateInterCode(t->childL, quadrupla);
+			aux = t->childL;
+			while(aux != NULL){
+				generateInterCode(aux, quadrupla);
+				aux = aux->sibling;
+			}
 			aux = t->childM;
 			while(aux != NULL){
 				generateInterCode(aux, quadrupla);
@@ -121,6 +89,7 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 			}
 			func_atual = copiaString("global");
 			insere_inst("END", t->lexema, "-", "-", quadrupla);
+			limpa_regs();
 			generateInterCode(t->sibling, quadrupla);
 			if(t->sibling == NULL){
 				insere_inst("HALT", "-", "-", "-", quadrupla);
@@ -128,9 +97,6 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 		}
 		else if(t->tipo == ParamNode || t->tipo == VetorParamNode){
 			insere_inst("ARG", "INT", t->lexema, func_atual, quadrupla);
-			generateInterCode(t->sibling, quadrupla);
-			op1 = atribuiReg(t->lexema, func_atual);
-			insere_inst("LOAD", op1, t->lexema, "-", quadrupla);
 		}
 		else if(t->tipo == IfNode){
 			TreeNode * aux;
@@ -162,75 +128,69 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 					generateInterCode(aux, quadrupla);
 					aux = aux->sibling;
 				}
-				generateInterCode(t->childM, quadrupla);
 				insere_inst("LAB", op2, "-", "-", quadrupla);
 			}
 			
 		}
 		else if(t->tipo == OpNode){
-			op1 = generateInterCode(t->childL, quadrupla);
-			op2 = generateInterCode(t->childM, quadrupla);
-			if(t->token == DEQUAL){
-				op3 = atribuiReg();
-				insere_inst("EQUAL", op1, op2, op3, quadrupla);
-			}
-			else if(t->token == EQUAL){
-				insere_inst("ASSIGN", op1, op2, "-", quadrupla);
+			if(t->token == EQUAL){
 				if(t->childL->tipo == VarNode){
+					op1 = atribuiReg(t->childL->lexema, func_atual);
+					op2 = generateInterCode(t->childM, quadrupla);
+					insere_inst("ASSIGN", op1, op2, "-", quadrupla);
 					insere_inst("STORE", op1, t->childL->lexema, "-", quadrupla);
 				}
 				else if(t->childL->tipo == VetorNode){
+					op1 = atribuiReg(NULL, NULL);
+					op2 = generateInterCode(t->childM, quadrupla);
 					insere_inst("ASSIGN", op1, op2, "-", quadrupla);
 					op3 = generateInterCode(t->childL->childL, quadrupla);
-					op2 = atribuiReg();
-					insere_inst("MULT", op3, "4", op2, quadrupla);
-					insere_inst("STORE", op1, t->childL->lexema, op2, quadrupla);
+					insere_inst("STORE", op1, t->childL->lexema, op3, quadrupla);
 				}
 				return op1;
 			}
-			else if(t->token == PLUS){
-				op3 = atribuiReg();
-				insere_inst("ADD", op1, op2, op3, quadrupla);	
+			else{
+				op1 = generateInterCode(t->childL, quadrupla);
+				op2 = generateInterCode(t->childM, quadrupla);
+				op3 = atribuiReg(NULL, NULL);
+				if(t->token == DEQUAL){
+					insere_inst("EQUAL", op1, op2, op3, quadrupla);
+				}
+				else if(t->token == PLUS){
+					insere_inst("ADD", op1, op2, op3, quadrupla);	
+				}
+				else if(t->token == MINUS){
+					insere_inst("SUB", op1, op2, op3, quadrupla);		
+				}
+				else if(t->token == TIMES){
+					insere_inst("MULT", op1, op2, op3, quadrupla);		
+				}
+				else if(t->token == SLASH){
+					insere_inst("DIV", op1, op2, op3, quadrupla);		
+				}
+				else if(t->token == LT){
+					insere_inst("SLT", op1, op2, op3, quadrupla);	
+				}
+				else if(t->token == GT){
+					insere_inst("SGT", op1, op2, op3, quadrupla);	
+				}
+				else if(t->token == LE){
+					insere_inst("SLE", op1, op2, op3, quadrupla);	
+				}
+				else if(t->token == GE){
+					insere_inst("SGE", op1, op2, op3, quadrupla);	
+				}
+				else if(t->token == DIFFERENT){
+					insere_inst("SDT", op1, op2, op3, quadrupla);	
+				}
+				return op3;
 			}
-			else if(t->token == MINUS){
-				op3 = atribuiReg();
-				insere_inst("SUB", op1, op2, op3, quadrupla);		
-			}
-			else if(t->token == TIMES){
-				op3 = atribuiReg();
-				insere_inst("MULT", op1, op2, op3, quadrupla);		
-			}
-			else if(t->token == SLASH){
-				op3 = atribuiReg();
-				insere_inst("DIV", op1, op2, op3, quadrupla);		
-			}
-			else if(t->token == LT){
-				op3 = atribuiReg();
-				insere_inst("SLT", op1, op2, op3, quadrupla);	
-			}
-			else if(t->token == GT){
-				op3 = atribuiReg();
-				insere_inst("SGT", op1, op2, op3, quadrupla);	
-			}
-			else if(t->token == LE){
-				op3 = atribuiReg();
-				insere_inst("SLE", op1, op2, op3, quadrupla);	
-			}
-			else if(t->token == GE){
-				op3 = atribuiReg();
-				insere_inst("SGE", op1, op2, op3, quadrupla);	
-			}
-			else if(t->token == DIFFERENT){
-				op3 = atribuiReg();
-				insere_inst("SDT", op1, op2, op3, quadrupla);	
-			}
-			return op3;
 		}
 		else if(t->tipo == NumNode){
 			return(t->lexema);
 		}
 		else if(t->tipo == VarNode){
-			op1 = atribuiReg();
+			op1 = atribuiReg(t->lexema, func_atual);
 			insere_inst("LOAD", op1, t->lexema, "-", quadrupla);
 			return op1;	
 		}
@@ -251,7 +211,7 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 			}
 			op2 = (char * ) malloc(sizeof(char)*10);
 			sprintf(op2, "%d", cont);
-			op3 = atribuiReg();
+			op3 = atribuiReg(NULL, NULL);
 			insere_inst("CALL", t->lexema, op2, op3, quadrupla);
 			return(op3);
 		}
@@ -269,11 +229,11 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 			}
 		}
 		else if(t->tipo == VetorNode){
-			op1 = atribuiReg();
+			op1 = atribuiReg(NULL, NULL);
 			op2 = generateInterCode(t->childL, quadrupla);
-			op3 = atribuiReg();
-			insere_inst("MULT", op2, "4", op3, quadrupla);
-			insere_inst("LOAD", op1, t->lexema, op3, quadrupla);
+			//op3 = atribuiReg();
+			//insere_inst("MULT", op2, "4", op2, quadrupla);
+			insere_inst("LOAD", op1, t->lexema, op2, quadrupla);
 			return op1;
 		}
 		else if(t->tipo == WhileNode){
@@ -297,49 +257,114 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 	}
 }
 
-
-char * atribuiReg(char * var, char * escopo){
-	char * temp;
-	temp = (char *)malloc(sizeof(char)*10);
-	if(registradores == NULL){
-		registradores = criaRegs();
-		insere_reg(var, escopo, cont_reg);
-		sprintf(temp, "R%d", cont_reg);
-		cont_reg++;
-		return(temp);
-	}
-	else{
-		if(registradores->inicio == NULL){
-			insere_reg(var, escopo, cont_reg);
-			sprintf(temp, "R%d", cont_reg);
-			cont_reg++;
-			return(temp);
-		}
-		else{
-			Tcelula * aux;
-			aux = registradores->inicio;
-			while(aux->proximo != NULL){
-				int t0 = strcmp(var, aux->var);
-				int t1 = strcmp(escopo, aux->escopo);
-				if(t0 == 0 && t1 == 0){
-					sprintf(temp, "R%d", aux->reg);
-					return(temp);
-				}
-			}
-			insere_reg(var, escopo, cont_reg);
-			sprintf(temp, "R%d", cont_reg);
-			cont_reg++;
-			return(temp);
-		}
-	}
-}
-
 char * criaLabel(){
 	char * temp;
 	temp = (char *) malloc(10*(sizeof(char)));
 	sprintf(temp, "L%d", cont_label);
 	cont_label++;
 	return temp;
+}
+
+void insere_reg(char * var, char * escopo, int reg){
+	Tcelula * registrador;
+	Tcelula * aux;
+	registrador = (Tcelula*)malloc(sizeof(Tcelula));
+	registrador->var = copiaString(var);
+	registrador->escopo = copiaString(escopo);
+	registrador->reg = reg;
+	if(registradores->inicio == NULL){
+		registradores->inicio = registrador;
+		registradores->fim = registrador;
+		registradores->tam = registradores->tam + 1;
+	}
+	else{
+		registradores->fim->proximo = registrador;
+		registrador->proximo = NULL;
+		registradores->fim = registrador;
+		registradores->tam = registradores->tam + 1;
+	}
+}
+
+int busca_reg(char * var, char * escopo){
+	if(registradores->inicio == NULL || var == NULL){
+		return -1;
+	}
+	else{
+		Tcelula * aux;
+		aux = registradores->inicio;
+		while(aux != NULL){
+			if(aux->var == NULL){
+				aux = aux->proximo;
+			}
+			else{
+				int t0 = strcmp(var, aux->var);
+				if(t0 == 0){
+					return(aux->reg);
+				}
+				aux = aux->proximo;
+			}
+		}
+		return -1;
+	}
+}
+
+
+char * atribuiReg(char * var, char * escopo){
+	char * temp;
+	int i;
+	temp = (char *)malloc(sizeof(char)*3);
+	int reg = busca_reg(var, escopo);
+	if(reg == -1){
+		for(i = 0; i < MAX_REGS;i++){
+			if(reg_is_free(i)){
+				insere_reg(var, escopo, i);
+				sprintf(temp, "R%d", i);
+				return(temp);	
+			}
+		}		
+	}
+	else{
+		sprintf(temp, "R%d", reg);
+		return(temp);
+	}
+}
+
+int reg_is_free(int reg){
+	Tcelula * aux;
+	aux = registradores->inicio;
+	while(aux != NULL){
+		if(aux->reg == reg){
+			return(0);
+		}
+		aux = aux->proximo;
+	}
+	return(1);
+}
+
+void limpa_regs(void){
+	while(registradores->inicio != NULL){
+		remove_reg(registradores->inicio);
+	}
+}
+
+void remove_reg(Tcelula * registro){
+	Tcelula * aux;
+	Tcelula * anterior;
+	anterior = NULL;
+	aux = registradores->inicio;
+	while(aux != registro){
+		anterior = aux;
+		aux = aux->proximo;
+	}
+	if(anterior == NULL){
+		registradores->inicio = aux->proximo;
+		aux->proximo = NULL;
+		free(aux);
+	}
+	else{
+		anterior = aux->proximo;
+		free(aux);
+	}
 }
 
 // analise semantica vetor arrumar

@@ -41,6 +41,7 @@ void main(int arcg, char ** argv){
     intercode = fopen("saida/inter_code.txt", "w");
     Tquadruplas * quadrupla;
     quadrupla = criaQuadrupla();
+    registradores = criaRegs();
     generateInterCode(savedTree, quadrupla);
     imprimeQuadruplas(quadrupla);
 }

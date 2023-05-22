@@ -1,6 +1,5 @@
 
 
-
 <int, INT> <x, ID><[, LBRACKET><10, NUM><], RBRACKET><;, SEMICOLON>
 
 <int, INT> <minloc, ID> <(, LPAREN><int, INT> <a, ID><[, LBRACKET><], RBRACKET><,, COMMA> <int, INT> <low, ID><,, COMMA> <int, INT> <high, ID><), RPAREN> <{, LBRACE> 

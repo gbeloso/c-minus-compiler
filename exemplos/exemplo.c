@@ -1,6 +1,5 @@
 /* Um programa para ordenação por seleção de uma matriz com dez elementos. */
 
-
 int x[10];
 
 int minloc (int a[], int low, int high) { 
