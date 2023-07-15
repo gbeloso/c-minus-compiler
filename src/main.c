@@ -5,14 +5,18 @@
 #include "symtab.h"
 #include "parser.tab.h"
 #include "inter_code.h"
+#include "assembly.h"
+#include "mem.h"
+#include "binary.h"
 
-void main(int arcg, char ** argv){
+int main(int arcg, char ** argv){
     int temp = 1;
     int i;
     fonte = fopen("exemplos/exemplo.c", "r");
     tokens = fopen("saida/tokens.txt", "w");
     arvore = fopen("saida/arvore.txt", "w");
     saidaTabela = fopen("saida/tabela.txt", "w");
+    saidaAssembly = fopen("saida/assembly.txt", "w");
     yyin = fonte;
     yyparse();
     if (savedTree != NULL){
@@ -44,4 +48,13 @@ void main(int arcg, char ** argv){
     registradores = criaRegs();
     generateInterCode(savedTree, quadrupla);
     imprimeQuadruplas(quadrupla);
+    TAssemblyCode * assemblyList = criaAssemblyCode();
+    memoriaLista = criaListaMemoria();
+    geraAssembly(quadrupla, assemblyList);
+    imprimeAssembly(assemblyList);
+    imprimeMemoriaLista(memoriaLista);
+    TBinCode * binCodeList = criaBinCode();
+    geraBinCode(binCodeList, assemblyList);
+    imprimeBinCode(binCodeList);
+    return 0;
 }

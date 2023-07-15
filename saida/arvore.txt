@@ -20,7 +20,7 @@ Func: minloc int
 			Var: low int
 			Num: 1 int
 	while 
-		Op: < 
+		Op: > 
 			Var: i int
 			Var: high int
 		if 

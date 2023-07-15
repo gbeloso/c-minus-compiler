@@ -17,7 +17,6 @@ char * copiaString(char * palavra){
 TreeNode * newNode(int token, char * lexema, int tipo, int linha)
 { 
     TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
-    int i;
     if (t==NULL)
         printf("Out of memory error at line %d\n",linha);
     else {

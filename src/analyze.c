@@ -10,7 +10,6 @@
 //Tlista * tabela[211];
 
 void analyze(TreeNode * t){
-	Tno * aux;
 	int n;
 	if(t==NULL){
 		return;
@@ -116,6 +115,7 @@ int verificaTipo(TreeNode * t){
 			return aux->tipo_id;
 		}
 	}
+	return -1;
 }
 
 //decl global uso local = tudo certo

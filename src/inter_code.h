@@ -1,5 +1,5 @@
 Tquadruplas * criaQuadrupla();
-void insere_inst(char * instrucao, char * op1, char * op2, char * res, Tquadruplas * quadrupla);
+void insere_inst(char * instrucao, char * op1, char * op2, char * res, int arrayType, Tquadruplas * quadrupla);
 void imprimeQuadruplas(Tquadruplas * quadrupla);
 char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla);
 char * criaLabel();

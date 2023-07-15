@@ -9,7 +9,7 @@
     <k, ID> <=, EQUAL> <low, ID><;, SEMICOLON> 
     <j, ID> <=, EQUAL> <a, ID><[, LBRACKET><low, ID><], RBRACKET><;, SEMICOLON>
     <i, ID> <=, EQUAL> <low, ID> <+, PLUS> <1, NUM><;, SEMICOLON> 
-    <while, WHILE> <(, LPAREN><i, ID> <<, LT> <high, ID><), RPAREN> <{, LBRACE> 
+    <while, WHILE> <(, LPAREN><i, ID> <>, GT> <high, ID><), RPAREN> <{, LBRACE> 
         <if, IF> <(, LPAREN><a, ID><[, LBRACKET><i, ID><], RBRACKET> <<, LT> <j, ID><), RPAREN> <{, LBRACE> 
             <j, ID> <=, EQUAL> <a, ID><[, LBRACKET><i, ID><], RBRACKET><;, SEMICOLON> 
             <k, ID> <=, EQUAL> <i, ID><;, SEMICOLON> 
