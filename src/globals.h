@@ -16,14 +16,19 @@ typedef struct treeNode
     char * lexema;
    } TreeNode; // no da arvore
 
+typedef struct linha{
+    int numLinha;
+    struct linha * proximo;
+} TLinha; // linha da tabela hash
+
 typedef struct no
 {
-    int linhas;
     char * lexema;
     char * escopo;
     int tipo_id;
     int tipo_node;
     struct no * proximo;
+    TLinha * linhas;
 }Tno; //no da tabela hash
 
 typedef struct lista

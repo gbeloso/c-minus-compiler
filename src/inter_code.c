@@ -6,11 +6,12 @@
 #include <string.h>
 #include <math.h>
 
-#define MAX_REGS 15
+#define MAX_REGS 58
 
 int lineCounter = 0;
 int cont_reg = 0;
 int cont_label = 0;
+char * endLabel;
 FILE * intercode;
 char * func_atual = "global";
 
@@ -81,6 +82,7 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 	else{
 		if(t->tipo == FunNode){
 			TreeNode * aux;
+			endLabel = criaLabel();
 			func_atual = copiaString(t->lexema);
 			if(t->token == INT){
 				op1 = copiaString("INT");
@@ -97,12 +99,11 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 			aux = t->childM;
 			while(aux != NULL){
 				generateInterCode(aux, quadrupla);
-				limpa_regs();
 				aux = aux->sibling;
 			}
 			func_atual = copiaString("global");
+			insere_inst("LAB", endLabel, "-", "-", 0, quadrupla);
 			insere_inst("END", t->lexema, "-", "-", 0, quadrupla);
-			limpa_regs();
 			generateInterCode(t->sibling, quadrupla);
 			if(t->sibling == NULL){
 				insere_inst("HALT", "-", "-", "-", 0, quadrupla);
@@ -213,6 +214,7 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 		else if(t->tipo == ReturnNode){
 			op1 = generateInterCode(t->childL, quadrupla);
 			insere_inst("RET", op1, "-", "-", 0, quadrupla);
+			insere_inst("GOTO", endLabel, "-", "-", 0, quadrupla);
 			return op1;		
 		}
 		else if(t->tipo == AtivNode){
@@ -324,8 +326,7 @@ int busca_reg(char * var, char * escopo){
 				aux = aux->proximo;
 			}
 			else{
-				int t0 = strcmp(var, aux->var);
-				if(t0 == 0){
+				if(strcmp(var, aux->var) == 0 && strcmp(escopo, aux->escopo) == 0){
 					return(aux->reg);
 				}
 				aux = aux->proximo;

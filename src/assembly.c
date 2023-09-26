@@ -26,7 +26,7 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
                 insereVar(escopoAssembly, NULL, 1, JumpAddress, 0);
                 insereVar(escopoAssembly, NULL, 1, SP, 0);
                 insereVar(escopoAssembly, NULL, 1, FP, 0);
-                insereAssemblyInst("str", "R15", "fp", NULL, getJumpAddress(escopoAssembly), assemblyList);
+                insereAssemblyInst("str", "R63", "fp", NULL, getJumpAddress(escopoAssembly), assemblyList);
             }
             aux = aux->proximo;
         }
@@ -54,6 +54,7 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
         }
         else if(strcmp("IN", aux->instrucao) == 0){
             insereAssemblyInst("in", aux->op1, NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("posin", NULL, NULL, NULL, NULL, assemblyList);
             aux = aux->proximo;
         }
         else if(strcmp("ADD", aux->instrucao) == 0){
@@ -190,17 +191,16 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
                 insereVar(escopoAssembly, NULL, 1, SP, 0);
                 insereVar(escopoAssembly, NULL, 1, FP, 0);
                 insereVar(escopoAssembly, NULL, 1, JumpAddress, 0);
-                insereAssemblyInst("str", "R15", "fp", NULL, getJumpAddress(escopoAssembly), assemblyList);
+                insereAssemblyInst("str", "R63", "fp", NULL, getJumpAddress(escopoAssembly), assemblyList);
             }
             aux = aux->proximo;
         }
         else if(strcmp("END", aux->instrucao) == 0){
             if(strcmp("main", aux->op1) != 0){
                 insereAssemblyInst("ldr", "sp", "fp", NULL, getSP(escopoAssembly), assemblyList);
-                insereAssemblyInst("ldr", "R0", "fp", NULL, getJumpAddress(escopoAssembly), assemblyList);
-                insereAssemblyInst("ldr", "R1", "fp", NULL, getFP(escopoAssembly), assemblyList);
-                insereAssemblyInst("mov", "fp", NULL, "R1", NULL, assemblyList);
-                insereAssemblyInst("jmpr", "R0", NULL, NULL, NULL, assemblyList);
+                insereAssemblyInst("ldr", "R59", "fp", NULL, getJumpAddress(escopoAssembly), assemblyList);
+                insereAssemblyInst("ldr", "fp", "fp", NULL, getFP(escopoAssembly), assemblyList);
+                insereAssemblyInst("jmpr", "R59", NULL, NULL, NULL, assemblyList);
             }
             escopoAssembly = copiaString("global");
             aux = aux->proximo;
@@ -251,9 +251,9 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
                             insereAssemblyInst("ldr", aux->op1, "fp", NULL, posicao, assemblyList);
                         }
                         else{
-                            insereAssemblyInst("ldr", "R12", "fp", NULL, posicao, assemblyList);
-                            insereAssemblyInst("addi", "R12", "R12", NULL, aux->res, assemblyList);
-                            insereAssemblyInst("ldr", aux->op1, "R12", NULL, "0", assemblyList);      
+                            insereAssemblyInst("ldr", "R58", "fp", NULL, posicao, assemblyList);
+                            insereAssemblyInst("addi", "R58", "R58", NULL, aux->res, assemblyList);
+                            insereAssemblyInst("ldr", aux->op1, "R58", NULL, "0", assemblyList);      
                         }
                     }
                     else{
@@ -268,13 +268,11 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
                             insereAssemblyInst("ldr", aux->op1, aux->res, NULL, posicao, assemblyList);
                         }
                         else if(aux->res[0] == '-'){
-                            insereAssemblyInst("mov", aux->op1, NULL, "fp", NULL, assemblyList);
-                            insereAssemblyInst("addi", aux->op1, aux->op1, NULL, posicao, assemblyList);
+                            insereAssemblyInst("addi", aux->op1, "fp", NULL, posicao, assemblyList);
                         }
                         else{
-                            insereAssemblyInst("mov", "R12", NULL, "fp", NULL, assemblyList);
-                            insereAssemblyInst("addi", "R12", "R12", NULL, aux->res, assemblyList);
-                            insereAssemblyInst("ldr", aux->op1, "R12", NULL, posicao, assemblyList);
+                            insereAssemblyInst("addi", "R58", "fp", NULL, aux->res, assemblyList);
+                            insereAssemblyInst("ldr", aux->op1, "R58", NULL, posicao, assemblyList);
                         }
                     }
                     else{
@@ -299,13 +297,13 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
                         insereAssemblyInst("ldrb", aux->op1, NULL, NULL, posicao, assemblyList);
                     }
                     else{
-                        insereAssemblyInst("ldrb", "R12", NULL, NULL, posicao, assemblyList);
-                        insereAssemblyInst("ldr", aux->op1, "R12", NULL, aux->res, assemblyList);
+                        insereAssemblyInst("ldrb", "R58", NULL, NULL, posicao, assemblyList);
+                        insereAssemblyInst("ldr", aux->op1, "R58", NULL, aux->res, assemblyList);
                     }
                 }
                 else{
-                    insereAssemblyInst("ldrb", "R12", NULL, NULL, "0", assemblyList);
-                    insereAssemblyInst("ldr", aux->op1, "R12", NULL, posicao, assemblyList);
+                    insereAssemblyInst("ldrb", "R58", NULL, NULL, "0", assemblyList);
+                    insereAssemblyInst("ldr", aux->op1, "R58", NULL, posicao, assemblyList);
                 }
             }
             aux = aux->proximo;
@@ -327,13 +325,13 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
                         insereAssemblyInst("str", aux->op1, aux->res, NULL, posicao, assemblyList);
                     }
                     else{
-                        insereAssemblyInst("ldrb", "R12", NULL, NULL, posicao, assemblyList);
-                        insereAssemblyInst("str", aux->op1, "R12", NULL, aux->res, assemblyList);
+                        insereAssemblyInst("ldrb", "R58", NULL, NULL, posicao, assemblyList);
+                        insereAssemblyInst("str", aux->op1, "R58", NULL, aux->res, assemblyList);
                     }
                 }
                 else{
-                    insereAssemblyInst("ldrb", "R12", NULL, NULL, posicao, assemblyList);
-                    insereAssemblyInst("str", aux->op1, "R12", NULL, "0", assemblyList);
+                    insereAssemblyInst("ldrb", "R58", NULL, NULL, posicao, assemblyList);
+                    insereAssemblyInst("str", aux->op1, "R58", NULL, "0", assemblyList);
                 }
             }
             else{//local
@@ -350,26 +348,26 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
                 if(temp->array){
                     if(temp->dataType == Args){//(STORE, R9, a, R4)
                         if(aux->res[0] == 'R'){
-                            insereAssemblyInst("ldr", "R12", "fp", NULL, posicao, assemblyList); 
-                            insereAssemblyInst("add", aux->res, aux->res, "R12", NULL, assemblyList);
+                            insereAssemblyInst("ldr", "R58", "fp", NULL, posicao, assemblyList); 
+                            insereAssemblyInst("add", aux->res, aux->res, "R58", NULL, assemblyList);
                             insereAssemblyInst("str", aux->op1, aux->res, NULL, "0", assemblyList);
                         }
                         else{
-                            insereAssemblyInst("ldr", "R12", "fp", NULL, posicao, assemblyList); 
-                            insereAssemblyInst("addi", "R12", "R12", NULL, aux->res, assemblyList);
+                            insereAssemblyInst("ldr", "R58", "fp", NULL, posicao, assemblyList); 
+                            insereAssemblyInst("addi", "R58", "R58", NULL, aux->res, assemblyList);
                             insereAssemblyInst("str", aux->op1, aux->res, NULL, "0", assemblyList);
                         }
                     }
                     else{//stack
                         if(aux->res[0] == 'R'){
-                            insereAssemblyInst("mov", "R12", NULL, "fp", NULL, assemblyList); 
-                            insereAssemblyInst("add", "R12", "R12", aux->res, NULL, assemblyList);
-                            insereAssemblyInst("str", aux->op1, "R12", NULL, posicao, assemblyList);
+                            insereAssemblyInst("mov", "R58", NULL, "fp", NULL, assemblyList); 
+                            insereAssemblyInst("add", "R58", "R58", aux->res, NULL, assemblyList);
+                            insereAssemblyInst("str", aux->op1, "R58", NULL, posicao, assemblyList);
                         }
                         else{
-                            insereAssemblyInst("mov", "R12", NULL, "fp", NULL, assemblyList); 
-                            insereAssemblyInst("addi", "R12", "R12", NULL, aux->res, assemblyList);
-                            insereAssemblyInst("str", aux->op1, "R12", NULL, posicao, assemblyList);
+                            insereAssemblyInst("mov", "R58", NULL, "fp", NULL, assemblyList); 
+                            insereAssemblyInst("addi", "R58", "R58", NULL, aux->res, assemblyList);
+                            insereAssemblyInst("str", aux->op1, "R58", NULL, posicao, assemblyList);
                         }
                     }
                 }
@@ -387,8 +385,8 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
                 insereAssemblyInst("str", aux->op1, "sp", NULL, posicao, assemblyList);
             }
             else{
-                insereAssemblyInst("ldrb", "R12", NULL, NULL, aux->op1, assemblyList);
-                insereAssemblyInst("str", "R12", "sp", NULL, posicao, assemblyList);
+                insereAssemblyInst("ldrb", "R58", NULL, NULL, aux->op1, assemblyList);
+                insereAssemblyInst("str", "R58", "sp", NULL, posicao, assemblyList);
             }
             aux = aux->proximo;
         }
@@ -404,33 +402,19 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
             insereAssemblyInst("ldrb", "sp", NULL, NULL, "0", assemblyList);
             insereAssemblyInst("add", "fp", "fp", "sp", NULL, assemblyList);
             insereAssemblyInst("jal", NULL, NULL, NULL, aux->op1, assemblyList);
-            insereAssemblyInst("mov", aux->res, NULL, "R12", NULL, assemblyList);
+            insereAssemblyInst("mov", aux->res, NULL, "R58", NULL, assemblyList);
             param_count = 0;
             aux = aux->proximo;
         }
         else if(strcmp("RET", aux->instrucao) == 0){
-            if(strcmp(escopoAssembly, "main") != 0){
-                if(aux->op1[0] == '-'){
-                    insereAssemblyInst("ldr", "sp", "fp", NULL, getSP(escopoAssembly), assemblyList);
-                    insereAssemblyInst("ldr", "R0", "fp", NULL, getJumpAddress(escopoAssembly), assemblyList);
-                    insereAssemblyInst("ldr", "R1", "fp", NULL, getFP(escopoAssembly), assemblyList);
-                    insereAssemblyInst("mov", "fp", NULL, "R1", NULL, assemblyList);
-                    insereAssemblyInst("jmpr", "R0", NULL, NULL, NULL, assemblyList);
+            if(aux->op1[0] != '-'){
+                if(aux->op1[0] == 'R'){
+                    insereAssemblyInst("mov", "R60", NULL, aux->op1, NULL, assemblyList);
                 }
                 else{
-                    insereAssemblyInst("ldr", "sp", "fp", NULL, getSP(escopoAssembly), assemblyList);
-                    insereAssemblyInst("ldr", "R0", "fp", NULL, getJumpAddress(escopoAssembly), assemblyList);
-                    insereAssemblyInst("ldr", "R1", "fp", NULL, getFP(escopoAssembly), assemblyList);
-                    insereAssemblyInst("mov", "fp", NULL, "R1", NULL, assemblyList);
-                    if(aux->op1[0] == 'R'){
-                        insereAssemblyInst("mov", "R12", NULL, aux->op1, NULL, assemblyList);
-                    }
-                    else{
-                        insereAssemblyInst("ldrb", "R12", NULL, NULL, aux->op1, assemblyList);
-                    }
-                    insereAssemblyInst("jmpr", "R0", NULL, NULL, NULL, assemblyList);
+                    insereAssemblyInst("ldrb", "R60", NULL, NULL, aux->op1, assemblyList);
                 }
-            }   
+            }
             aux = aux->proximo;
         }
         else{

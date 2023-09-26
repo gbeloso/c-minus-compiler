@@ -63,10 +63,84 @@ void main(void) {
     output(gcd(x,y));
 }
 
-int a;
+/* área do triangulo */
+int area(int b, int h){
+    return(b*h/2);
+}
 
 int main(void){
-    a = 0;
-    a = a + 1;
-    output(a * 3 - 4);
+    int h;
+    int b;
+    input(h);
+    input(b);
+    output(area(b, h));
+}
+
+/* Fibonacci*/
+int fib(int n){
+    if(n == 0){
+        return 0;
+    }
+    else if (n == 1)
+    {
+        return 1;
+    }
+    else{
+        int k;
+        int fn;
+        int fnMenosUm;
+        int res;
+        fn = 1;
+        fnMenosUm = 0;
+        k = 0;
+        while(k < n - 1){
+            res = fn + fnMenosUm;
+            fnMenosUm = fn;
+            fn = res;
+            k = k + 1;
+        }
+        return res;
+    }
+}
+
+int main(void){
+    int n;
+    input(n);
+    output(fib(n));
+}
+
+/* Fatorial*/
+int fat(int n){
+    if(n == 0){
+        return(1);
+    }
+    else{
+        return(n*fat(n-1));
+    }
+}
+
+int main(void){
+    int n;
+    input(n);
+    output(fat(n));
+}
+
+/* Potencia */
+int pot(int base, int expoente){
+    int res;
+    res = 1;
+    while(expoente > 0){
+        res = res * base;
+        expoente = expoente - 1;
+    }
+    return(res);
+}
+
+int main(void){
+    int base;
+    int expoente;
+    input(base);
+    input(expoente);
+    output(pot(base, expoente));
+    return 0;
 }
