@@ -303,6 +303,12 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
             strcat(operacao, "000000000000");
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
+        else{
+            char * operacao = (char *) malloc(sizeof(char)*32);
+            sprintf(operacao, "00011000");
+            strcat(operacao, "000000000000000000000000");
+            insereBinInst(criaBinInst(operacao), binCodeList);
+        }
         aux = aux->proximo;
     }
 }
