@@ -398,11 +398,12 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
             param_count++;
             char * posicaoFP = (char *) malloc(sizeof(char)*(int)log10(param_count));
             sprintf(posicaoFP, "%d", param_count);
-            insereAssemblyInst("str", "fp", "fp", NULL, posicaoFP, assemblyList);
-            insereAssemblyInst("ldrb", "sp", NULL, NULL, "0", assemblyList);
+            insereAssemblyInst("str", "fp", "sp", NULL, posicaoFP, assemblyList);
             insereAssemblyInst("add", "fp", "fp", "sp", NULL, assemblyList);
+            insereAssemblyInst("addi", "fp", "fp", NULL, "1", assemblyList);
+            insereAssemblyInst("ldrb", "sp", NULL, NULL, "0", assemblyList);
             insereAssemblyInst("jal", NULL, NULL, NULL, aux->op1, assemblyList);
-            insereAssemblyInst("mov", aux->res, NULL, "R58", NULL, assemblyList);
+            insereAssemblyInst("mov", aux->res, NULL, "R60", NULL, assemblyList);
             param_count = 0;
             aux = aux->proximo;
         }

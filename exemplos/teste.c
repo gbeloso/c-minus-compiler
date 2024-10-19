@@ -71,8 +71,8 @@ int area(int b, int h){
 int main(void){
     int h;
     int b;
-    input(h);
-    input(b);
+    h = input();
+    b = input();
     output(area(b, h));
 }
 
@@ -105,7 +105,7 @@ int fib(int n){
 
 int main(void){
     int n;
-    input(n);
+    n = input();
     output(fib(n));
 }
 
@@ -121,7 +121,7 @@ int fat(int n){
 
 int main(void){
     int n;
-    input(n);
+    n = input();
     output(fat(n));
 }
 
@@ -139,8 +139,8 @@ int pot(int base, int expoente){
 int main(void){
     int base;
     int expoente;
-    input(base);
-    input(expoente);
+    base = input();
+    expoente = input();
     output(pot(base, expoente));
     return 0;
 }

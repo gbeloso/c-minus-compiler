@@ -1,19 +1,11 @@
-/* Potencia */
-int pot(int base, int expoente){
-    int res;
-    res = 1;
-    while(expoente > 0){
-        res = res * base;
-        expoente = expoente - 1;
-    }
-    return(res);
+int area(int b, int h){
+    return(b*h/2);
 }
 
 int main(void){
-    int base;
-    int expoente;
-    input(base);
-    input(expoente);
-    output(pot(base, expoente));
-    return 0;
+    int h;
+    int b;
+    h = input();
+    b = input();
+    output(area(b, h));
 }

@@ -39,7 +39,7 @@ void imprimeBinCode(TBinCode * binCodeList){
     TBinInst * aux = binCodeList->inicio;
     int line = 0;
     while(aux != NULL){
-        fprintf(saidaBin, "rom[%d] = 32'b%s;\n", line, aux->instr);
+        fprintf(saidaBin, "%s\n", aux->instr);
         line++;
         aux = aux->proximo;
     }
