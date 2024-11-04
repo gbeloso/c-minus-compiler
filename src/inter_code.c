@@ -6,7 +6,7 @@
 #include <string.h>
 #include <math.h>
 
-#define MAX_REGS 58
+#define MAX_REGS 57
 
 int lineCounter = 0;
 int cont_reg = 0;

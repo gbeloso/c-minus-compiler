@@ -1,11 +1,13 @@
-int area(int b, int h){
-    return(b*h/2);
+/* Soma escalar FUNCIONOU*/
+int somaEscalar(int x){
+	int resultado;
+	resultado = x + 5;
+	return resultado;
 }
 
 int main(void){
-    int h;
-    int b;
-    h = input();
-    b = input();
-    output(area(b, h));
+	int x; int y; int resposta;
+	x = input();
+	resposta = somaEscalar(x);
+	output(resposta);
 }

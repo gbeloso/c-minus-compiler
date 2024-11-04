@@ -48,7 +48,7 @@ void main(void) {
     }
 }
 
-/* Um programa para calcular o mdc segundo o algoritmo de Euclides. */
+/* Um programa para calcular o mdc segundo o algoritmo de Euclides. FUNCIONOU*/
 
 int gcd (int u, int v) { 
     if (v == 0) return u ; 
@@ -63,7 +63,7 @@ void main(void) {
     output(gcd(x,y));
 }
 
-/* área do triangulo */
+/* área do triangulo  FUNCIONOU*/
 int area(int b, int h){
     return(b*h/2);
 }
@@ -76,7 +76,7 @@ int main(void){
     output(area(b, h));
 }
 
-/* Fibonacci*/
+/* Fibonacci FUNCIONOU*/
 int fib(int n){
     if(n == 0){
         return 0;
@@ -109,13 +109,13 @@ int main(void){
     output(fib(n));
 }
 
-/* Fatorial*/
+/* Fatorial FUNCIONOU*/
 int fat(int n){
     if(n == 0){
         return(1);
     }
     else{
-        return(n*fat(n-1));
+        return(fat(n-1)*n);
     }
 }
 
@@ -125,7 +125,7 @@ int main(void){
     output(fat(n));
 }
 
-/* Potencia */
+/* Potencia  FUNCIONOU*/
 int pot(int base, int expoente){
     int res;
     res = 1;
@@ -143,4 +143,75 @@ int main(void){
     expoente = input();
     output(pot(base, expoente));
     return 0;
+}
+
+
+/* Soma FUNCIONOU*/
+int soma(int x, int y){
+	int resultado;
+	resultado = x + y;
+	return resultado;
+}
+
+int main(void){
+	int x; int y; int resposta;
+	x = input();
+	y = input();
+	resposta = soma(x, y);
+	output(resposta);
+}
+/* sub FUNCIONOU*/
+int sub(int x, int y){
+	int resultado;
+	resultado = x - y;
+	return resultado;
+}
+
+int main(void){
+	int x; int y; int resposta;
+	x = input();
+	y = input();
+	resposta = sub(x, y);
+	output(resposta);
+}
+/* mult FUNCIONOU*/
+int mult(int x, int y){
+	int resultado;
+	resultado = x * y;
+	return resultado;
+}
+
+int main(void){
+	int x; int y; int resposta;
+	x = input();
+	y = input();
+	resposta = mult(x, y);
+	output(resposta);
+}
+/* div FUNCIONOU*/
+int div(int x, int y){
+	int resultado;
+	resultado = x / y;
+	return resultado;
+}
+
+int main(void){
+	int x; int y; int resposta;
+	x = input();
+	y = input();
+	resposta = div(x, y);
+	output(resposta);
+}
+/* Soma escalar FUNCIONOU*/
+int som_escalar(int x){
+	int resultado;
+	resultado = x + 5;
+	return resultado;
+}
+
+int main(void){
+	int x; int y; int resposta;
+	x = input();
+	resposta = soma_escalar(x);
+	output(resposta);
 }
