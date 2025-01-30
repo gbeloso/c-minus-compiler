@@ -417,6 +417,10 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
             }
             aux = aux->proximo;
         }
+        else if(strcmp("HALT", aux->instrucao) == 0){
+            insereAssemblyInst("halt", NULL, NULL, NULL, NULL, assemblyList);
+            aux = aux->proximo;
+        }
         else{
             aux = aux->proximo;
         }

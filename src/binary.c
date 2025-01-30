@@ -303,6 +303,12 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
             strcat(operacao, "000000000000");
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
+        else if(strcmp("halt", aux->instrucao) == 0){
+            char * operacao = (char *) malloc(sizeof(char)*32);
+            sprintf(operacao, "00011001");
+            strcat(operacao, "000000000000000000000000");
+            insereBinInst(criaBinInst(operacao), binCodeList);
+        }
         else{
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00011000");
