@@ -100,23 +100,27 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
         else if(strcmp("cmp", aux->instrucao) == 0){
+            char * rd = convertReg(aux->rd);
             char * rm = convertReg(aux->rm);
             char * rn = convertReg(aux->rn);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00000100");
             strcat(operacao, rn);
-            strcat(operacao, "000000000000");
+            strcat(operacao, rd);
+            strcat(operacao, "000000");
             strcat(operacao, rm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
         else if(strcmp("cmpi", aux->instrucao) == 0){
+            char * rd = convertReg(aux->rd);
             int n = atoi(aux->imm);
             char * imm = toBinaryString(n, 8);
             char * rn = convertReg(aux->rn);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00000101");
-            strcat(operacao, rn);   
-            strcat(operacao, "0000000000");
+            strcat(operacao, rn);
+            strcat(operacao, rd);
+            strcat(operacao, "0000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
@@ -218,37 +222,45 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
         }
         else if(strcmp("beq", aux->instrucao) == 0){
             int n = getLabelLine(aux->imm, assemblyCodeList);
+            char * rn = convertReg(aux->rn);
             char * imm = toBinaryString(n, 10);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00001110");
-            strcat(operacao, "00000000000000");
+            strcat(operacao, rn);
+            strcat(operacao, "00000000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
         else if(strcmp("bnq", aux->instrucao) == 0){
             int n = getLabelLine(aux->imm, assemblyCodeList);
+            char * rn = convertReg(aux->rn);
             char * imm = toBinaryString(n, 10);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00001111");
-            strcat(operacao, "00000000000000");
+            strcat(operacao, rn);
+            strcat(operacao, "00000000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
         else if(strcmp("bgt", aux->instrucao) == 0){
             int n = getLabelLine(aux->imm, assemblyCodeList);
+            char * rn = convertReg(aux->rn);
             char * imm = toBinaryString(n, 10);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00010000");
-            strcat(operacao, "00000000000000");
+            strcat(operacao, rn);
+            strcat(operacao, "00000000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
         else if(strcmp("blt", aux->instrucao) == 0){
             int n = getLabelLine(aux->imm, assemblyCodeList);
+            char * rn = convertReg(aux->rn);
             char * imm = toBinaryString(n, 10);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00010001");
-            strcat(operacao, "00000000000000");
+            strcat(operacao, rn);
+            strcat(operacao, "00000000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
@@ -306,7 +318,7 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
         else if(strcmp("halt", aux->instrucao) == 0){
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00011001");
-            strcat(operacao, "000000000000000000000000");
+            strcat(operacao, "000000000000000001001101");
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
         else{

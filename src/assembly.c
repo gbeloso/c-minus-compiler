@@ -100,12 +100,12 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
         else if(strcmp("EQUAL", aux->instrucao) == 0){
             if(strcmp("IFF", aux->proximo->instrucao) == 0){
                 if(aux->op2[0] == 'R'){
-                    insereAssemblyInst("cmp", NULL, aux->op1, aux->op2, NULL, assemblyList);
-                    insereAssemblyInst("bnq", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmp", "R55", aux->op1, aux->op2, NULL, assemblyList);
+                    insereAssemblyInst("bnq", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
                 else{
-                    insereAssemblyInst("cmpi", NULL, aux->op1, NULL, aux->op2, assemblyList);
-                    insereAssemblyInst("bnq", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmpi", "R55", aux->op1, NULL, aux->op2, assemblyList);
+                    insereAssemblyInst("bnq", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
             }
             aux = aux->proximo->proximo;
@@ -113,16 +113,16 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
         else if(strcmp("SLT", aux->instrucao) == 0){
             if(strcmp("IFF", aux->proximo->instrucao) == 0){
                 if(aux->op2[0] == 'R'){
-                    insereAssemblyInst("cmp", NULL, aux->op1, aux->op2, NULL, assemblyList);
-                    insereAssemblyInst("beq", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
-                    insereAssemblyInst("cmp", NULL, aux->op1, aux->op2, NULL, assemblyList);
-                    insereAssemblyInst("bgt", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmp", "R55", aux->op1, aux->op2, NULL, assemblyList);
+                    insereAssemblyInst("beq", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmp", "R55", aux->op1, aux->op2, NULL, assemblyList);
+                    insereAssemblyInst("bgt", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
                 else{
-                    insereAssemblyInst("cmpi", NULL, aux->op1, NULL, aux->op2, assemblyList);
-                    insereAssemblyInst("beq", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
-                    insereAssemblyInst("cmpi", NULL, aux->op1, NULL, aux->op2, assemblyList);
-                    insereAssemblyInst("bgt", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmpi", "R55", aux->op1, NULL, aux->op2, assemblyList);
+                    insereAssemblyInst("beq", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmpi", "R55", aux->op1, NULL, aux->op2, assemblyList);
+                    insereAssemblyInst("bgt", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
             }
             aux = aux->proximo->proximo;
@@ -130,16 +130,16 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
         else if(strcmp("SGT", aux->instrucao) == 0){
             if(strcmp("IFF", aux->proximo->instrucao) == 0){
                 if(aux->op2[0] == 'R'){
-                    insereAssemblyInst("cmp", NULL, aux->op1, aux->op2, NULL, assemblyList);
-                    insereAssemblyInst("beq", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
-                    insereAssemblyInst("cmp", NULL, aux->op1, aux->op2, NULL, assemblyList);
-                    insereAssemblyInst("blt", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmp", "R55", aux->op1, aux->op2, NULL, assemblyList);
+                    insereAssemblyInst("beq", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmp", "R55", aux->op1, aux->op2, NULL, assemblyList);
+                    insereAssemblyInst("blt", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
                 else{
+                    insereAssemblyInst("cmpi", "R55", aux->op1, NULL, aux->op2, assemblyList);
+                    insereAssemblyInst("beq", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                     insereAssemblyInst("cmpi", NULL, aux->op1, NULL, aux->op2, assemblyList);
-                    insereAssemblyInst("beq", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
-                    insereAssemblyInst("cmpi", NULL, aux->op1, NULL, aux->op2, assemblyList);
-                    insereAssemblyInst("blt", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("blt", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
             }
             aux = aux->proximo->proximo;
@@ -147,12 +147,12 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
         else if(strcmp("SGE", aux->instrucao) == 0){
             if(strcmp("IFF", aux->proximo->instrucao) == 0){
                 if(aux->op2[0] == 'R'){
-                    insereAssemblyInst("cmp", NULL, aux->op1, aux->op2, NULL, assemblyList);
-                    insereAssemblyInst("blt", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmp", "R55", aux->op1, aux->op2, NULL, assemblyList);
+                    insereAssemblyInst("blt", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
                 else{
-                    insereAssemblyInst("cmpi", NULL, aux->op1, NULL, aux->op2, assemblyList);
-                    insereAssemblyInst("blt", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmpi", "R55", aux->op1, NULL, aux->op2, assemblyList);
+                    insereAssemblyInst("blt", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
             }
             aux = aux->proximo->proximo;
@@ -160,12 +160,12 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
         else if(strcmp("SLE", aux->instrucao) == 0){
             if(strcmp("IFF", aux->proximo->instrucao) == 0){
                 if(aux->op2[0] == 'R'){
-                    insereAssemblyInst("cmp", NULL, aux->op1, aux->op2, NULL, assemblyList);
-                    insereAssemblyInst("bgt", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmp", "R55", aux->op1, aux->op2, NULL, assemblyList);
+                    insereAssemblyInst("bgt", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
                 else{
-                    insereAssemblyInst("cmpi", NULL, aux->op1, NULL, aux->op2, assemblyList);
-                    insereAssemblyInst("bgt", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmpi", "R55", aux->op1, NULL, aux->op2, assemblyList);
+                    insereAssemblyInst("bgt", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
             }
             aux = aux->proximo->proximo;
@@ -173,12 +173,12 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
         else if(strcmp("SDT", aux->instrucao) == 0){
             if(strcmp("IFF", aux->proximo->instrucao) == 0){
                 if(aux->op2[0] == 'R'){
-                    insereAssemblyInst("cmp", NULL, aux->op1, aux->op2, NULL, assemblyList);
-                    insereAssemblyInst("beq", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmp", "R55", aux->op1, aux->op2, NULL, assemblyList);
+                    insereAssemblyInst("beq", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
                 else{
-                    insereAssemblyInst("cmpi", NULL, aux->op1, NULL, aux->op2, assemblyList);
-                    insereAssemblyInst("beq", NULL, NULL, NULL, aux->proximo->op2, assemblyList);
+                    insereAssemblyInst("cmpi", "R55", aux->op1, NULL, aux->op2, assemblyList);
+                    insereAssemblyInst("beq", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
             }
             aux = aux->proximo->proximo;
