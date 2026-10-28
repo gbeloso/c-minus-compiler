@@ -138,7 +138,7 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
                 else{
                     insereAssemblyInst("cmpi", "R55", aux->op1, NULL, aux->op2, assemblyList);
                     insereAssemblyInst("beq", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
-                    insereAssemblyInst("cmpi", NULL, aux->op1, NULL, aux->op2, assemblyList);
+                    insereAssemblyInst("cmpi", "R55", aux->op1, NULL, aux->op2, assemblyList);
                     insereAssemblyInst("blt", NULL, "R55", NULL, aux->proximo->op2, assemblyList);
                 }
             }

@@ -161,7 +161,7 @@ int main(void){
 	output(resposta);
 }
 /* sub FUNCIONOU*/
-int sub(int x, int y){
+int subtracao(int x, int y){
 	int resultado;
 	resultado = x - y;
 	return resultado;
@@ -171,11 +171,11 @@ int main(void){
 	int x; int y; int resposta;
 	x = input();
 	y = input();
-	resposta = sub(x, y);
+	resposta = subtracao(x, y);
 	output(resposta);
 }
 /* mult FUNCIONOU*/
-int mult(int x, int y){
+int multiplicacao(int x, int y){
 	int resultado;
 	resultado = x * y;
 	return resultado;
@@ -185,11 +185,11 @@ int main(void){
 	int x; int y; int resposta;
 	x = input();
 	y = input();
-	resposta = mult(x, y);
+	resposta = multiplicacao(x, y);
 	output(resposta);
 }
 /* div FUNCIONOU*/
-int div(int x, int y){
+int divisao(int x, int y){
 	int resultado;
 	resultado = x / y;
 	return resultado;
@@ -199,11 +199,11 @@ int main(void){
 	int x; int y; int resposta;
 	x = input();
 	y = input();
-	resposta = div(x, y);
+	resposta = divisao(x, y);
 	output(resposta);
 }
 /* Soma escalar FUNCIONOU*/
-int som_escalar(int x){
+int somaEscalar(int x){
 	int resultado;
 	resultado = x + 5;
 	return resultado;
@@ -212,6 +212,33 @@ int som_escalar(int x){
 int main(void){
 	int x; int y; int resposta;
 	x = input();
-	resposta = soma_escalar(x);
+	resposta = somaEscalar(x);
 	output(resposta);
+}
+
+/*base do SO*/
+
+int x[3]; /*Vetor dos programas*/
+int y[3]; /*Vetor dos PCs dos programas*/
+int z[3]; /*Vetor dos PCs finais dos programas*/
+int a; /*Variável temporária*/
+int size;
+
+void run(int process, int tipo){
+    int tmp;
+    tmp = 300;
+    if(tipo == 1){
+        output(process * tmp);
+    }
+    return;
+}
+
+void main(void) {
+    while(1){
+        a = input();
+	    if(a == 1){
+            x[1] = input();
+            run(x[1], a);
+	    }
+    }
 }
