@@ -64,13 +64,12 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
         else if(strcmp("addi", aux->instrucao) == 0){
             char * rd = convertReg(aux->rd);
             int n = atoi(aux->imm);
-            char * imm = toBinaryString(n, 8);
+            char * imm = toBinaryString(n, 12);
             char * rn = convertReg(aux->rn);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00000001");
             strcat(operacao, rn);
             strcat(operacao, rd);
-            strcat(operacao, "0000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
@@ -89,13 +88,12 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
         else if(strcmp("subi", aux->instrucao) == 0){
             char * rd = convertReg(aux->rd);
             int n = atoi(aux->imm);
-            char * imm = toBinaryString(n, 8);
+            char * imm = toBinaryString(n, 12);
             char * rn = convertReg(aux->rn);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00000011");
             strcat(operacao, rn);
             strcat(operacao, rd);
-            strcat(operacao, "0000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
@@ -114,13 +112,12 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
         else if(strcmp("cmpi", aux->instrucao) == 0){
             char * rd = convertReg(aux->rd);
             int n = atoi(aux->imm);
-            char * imm = toBinaryString(n, 8);
+            char * imm = toBinaryString(n, 12);
             char * rn = convertReg(aux->rn);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00000101");
             strcat(operacao, rn);
             strcat(operacao, rd);
-            strcat(operacao, "0000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
@@ -150,13 +147,12 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
         else if(strcmp("multi", aux->instrucao) == 0){
             char * rd = convertReg(aux->rd);
             int n = atoi(aux->imm);
-            char * imm = toBinaryString(n, 8);
+            char * imm = toBinaryString(n, 12);
             char * rn = convertReg(aux->rn);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00001000");
             strcat(operacao, rn);
             strcat(operacao, rd);
-            strcat(operacao, "0000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
@@ -175,13 +171,12 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
         else if(strcmp("divi", aux->instrucao) == 0){
             char * rd = convertReg(aux->rd);
             int n = atoi(aux->imm);
-            char * imm = toBinaryString(n, 8);
+            char * imm = toBinaryString(n, 12);
             char * rn = convertReg(aux->rn);
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00001010");
             strcat(operacao, rn);
             strcat(operacao, rd);
-            strcat(operacao, "0000");
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
