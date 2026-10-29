@@ -160,6 +160,7 @@ int main(void){
 	resposta = soma(x, y);
 	output(resposta);
 }
+
 /* sub FUNCIONOU*/
 int subtracao(int x, int y){
 	int resultado;
@@ -174,6 +175,7 @@ int main(void){
 	resposta = subtracao(x, y);
 	output(resposta);
 }
+
 /* mult FUNCIONOU*/
 int multiplicacao(int x, int y){
 	int resultado;
@@ -188,6 +190,7 @@ int main(void){
 	resposta = multiplicacao(x, y);
 	output(resposta);
 }
+
 /* div FUNCIONOU*/
 int divisao(int x, int y){
 	int resultado;
@@ -202,6 +205,7 @@ int main(void){
 	resposta = divisao(x, y);
 	output(resposta);
 }
+
 /* Soma escalar FUNCIONOU*/
 int somaEscalar(int x){
 	int resultado;

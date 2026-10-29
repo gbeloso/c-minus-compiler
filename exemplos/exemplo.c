@@ -1,37 +1,35 @@
-/*base do SO*/
+int numProgramas;
+int progInicio[3];
 
-int x[3]; /*Vetor dos programas*/
-int y[3]; /*Vetor dos PCs dos programas*/
-int z[3]; /*Vetor dos PCs finais dos programas*/
-int a; /*Variável temporária*/
-int size;
-
-void run(int process, int tipo){
-    int tmp;
-    int b;
-    b = 0;
-    tmp = 300;
-    if(tipo == 1){
-        while(b <= 63){/*salva estado do SO*/
-            output(b);
-            b = b + 1;
-        }
-        tmp;
-        b = 0;
-        while(b <= 63){/*loada estado do SO*/
-            output(b);
-            b = b + 1;
-        }
-    }
+void dispatch(int endereco){
     return;
 }
 
-void main(void) {
+void main(void){
+    int opcao;
+    int escolha;
+    int i;
+
+    numProgramas = 3;
+    i = 0;
+    while(i < numProgramas){
+        progInicio[i] = 300 * i + 300;
+        i = i + 1;
+    }
+
     while(1){
-        a = input();
-	    if(a == 1){
-            x[1] = input();
-            run(x[1], a);
-	    }
+        output(1);
+        opcao = input();
+
+        if(opcao == 1){
+            output(numProgramas);
+            escolha = input();
+
+            if(escolha >= 0){
+                if(escolha < numProgramas){
+                    dispatch(progInicio[escolha]);
+                }
+            }
+        }
     }
 }

@@ -135,6 +135,7 @@ extern FILE * saidaTabela;
 extern FILE * saidaAssembly;
 extern Tregs * registradores;
 extern TMemoryList * memoriaLista;
+extern char * diretorioSaida;
 //extern static TreeNode * savedTree;
 
 #endif

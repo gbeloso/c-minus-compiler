@@ -1,0 +1,26 @@
+/*base do SO*/
+
+int x[3]; /*Vetor dos programas*/
+int y[3]; /*Vetor dos PCs dos programas*/
+int z[3]; /*Vetor dos PCs finais dos programas*/
+int a; /*Variável temporária*/
+int size;
+
+void run(int process, int tipo){
+    int tmp;
+    tmp = 300;
+    if(tipo == 1){
+        output(process * tmp);
+    }
+    return;
+}
+
+void main(void) {
+    while(1){
+        a = input();
+	    if(a == 1){
+            x[1] = input();
+            run(x[1], a);
+	    }
+    }
+}

@@ -1,0 +1,14 @@
+/* sub FUNCIONOU*/
+int subtracao(int x, int y){
+	int resultado;
+	resultado = x - y;
+	return resultado;
+}
+
+int main(void){
+	int x; int y; int resposta;
+	x = input();
+	y = input();
+	resposta = subtracao(x, y);
+	output(resposta);
+}

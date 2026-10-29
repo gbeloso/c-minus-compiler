@@ -1,0 +1,32 @@
+/* Fibonacci FUNCIONOU*/
+int fib(int n){
+    if(n == 0){
+        return 0;
+    }
+    else if (n == 1)
+    {
+        return 1;
+    }
+    else{
+        int k;
+        int fn;
+        int fnMenosUm;
+        int res;
+        fn = 1;
+        fnMenosUm = 0;
+        k = 0;
+        while(k < n - 1){
+            res = fn + fnMenosUm;
+            fnMenosUm = fn;
+            fn = res;
+            k = k + 1;
+        }
+        return res;
+    }
+}
+
+int main(void){
+    int n;
+    n = input();
+    output(fib(n));
+}

@@ -1,0 +1,14 @@
+/* mult FUNCIONOU*/
+int multiplicacao(int x, int y){
+	int resultado;
+	resultado = x * y;
+	return resultado;
+}
+
+int main(void){
+	int x; int y; int resposta;
+	x = input();
+	y = input();
+	resposta = multiplicacao(x, y);
+	output(resposta);
+}

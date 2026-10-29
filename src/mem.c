@@ -35,7 +35,9 @@ TData * criaData(char * dataName, int size, int memoryPos, int varType, int arra
 
 void imprimeMemoriaLista(TMemoryList * lista){
     TMemory * aux;
-    saidaMem = fopen("saida/mem.txt", "w");
+    char * caminho = (char *) malloc(sizeof(char) * (strlen(diretorioSaida) + 9));
+    sprintf(caminho, "%s/mem.txt", diretorioSaida);
+    saidaMem = fopen(caminho, "w");
     aux = lista->inicio;
     while(aux != NULL){
         fprintf(saidaMem, "%s, tam: %d\n", aux->escopo, aux->tamEscopo);

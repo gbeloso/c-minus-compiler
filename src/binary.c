@@ -35,7 +35,9 @@ void insereBinInst(TBinInst * noInst, TBinCode * binCode){
 
 void imprimeBinCode(TBinCode * binCodeList){
     FILE * saidaBin;
-    saidaBin = fopen("saida/bin.txt", "w");
+    char * caminho = (char *) malloc(sizeof(char) * (strlen(diretorioSaida) + 9));
+    sprintf(caminho, "%s/bin.txt", diretorioSaida);
+    saidaBin = fopen(caminho, "w");
     TBinInst * aux = binCodeList->inicio;
     int line = 0;
     while(aux != NULL){

@@ -1,0 +1,14 @@
+/* div FUNCIONOU*/
+int divisao(int x, int y){
+	int resultado;
+	resultado = x / y;
+	return resultado;
+}
+
+int main(void){
+	int x; int y; int resposta;
+	x = input();
+	y = input();
+	resposta = divisao(x, y);
+	output(resposta);
+}

@@ -8,15 +8,35 @@
 #include "assembly.h"
 #include "mem.h"
 #include "binary.h"
+#include <stdlib.h>
+#include <string.h>
 
-int main(int arcg, char ** argv){
+char * diretorioSaida;
+
+/* Monta um caminho "<diretorioSaida>/<arquivo>" em um buffer recem-alocado. */
+char * caminhoSaida(char * arquivo){
+    int tam = strlen(diretorioSaida) + strlen(arquivo) + 2;
+    char * caminho = (char *) malloc(sizeof(char) * tam);
+    sprintf(caminho, "%s/%s", diretorioSaida, arquivo);
+    return caminho;
+}
+
+int main(int argc, char ** argv){
     int temp = 1;
     int i;
-    fonte = fopen("exemplos/exemplo.c", "r");
-    tokens = fopen("saida/tokens.txt", "w");
-    arvore = fopen("saida/arvore.txt", "w");
-    saidaTabela = fopen("saida/tabela.txt", "w");
-    saidaAssembly = fopen("saida/assembly.txt", "w");
+    char * arquivoEntrada = "exemplos/exemplo.c";
+    diretorioSaida = "saida";
+    if(argc >= 2){
+        arquivoEntrada = argv[1];
+    }
+    if(argc >= 3){
+        diretorioSaida = argv[2];
+    }
+    fonte = fopen(arquivoEntrada, "r");
+    tokens = fopen(caminhoSaida("tokens.txt"), "w");
+    arvore = fopen(caminhoSaida("arvore.txt"), "w");
+    saidaTabela = fopen(caminhoSaida("tabela.txt"), "w");
+    saidaAssembly = fopen(caminhoSaida("assembly.txt"), "w");
     yyin = fonte;
     yyparse();
     if (savedTree != NULL){
@@ -42,7 +62,7 @@ int main(int arcg, char ** argv){
             fprintf(saidaTabela, "\n");   
         }
     }
-    intercode = fopen("saida/inter_code.txt", "w");
+    intercode = fopen(caminhoSaida("inter_code.txt"), "w");
     Tquadruplas * quadrupla;
     quadrupla = criaQuadrupla();
     registradores = criaRegs();
