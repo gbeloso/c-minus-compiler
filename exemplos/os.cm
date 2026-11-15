@@ -1,9 +1,5 @@
 int numProgramas;
-int progInicio[3];
-
-void dispatch(int endereco){
-    return;
-}
+int progInicio[4];
 
 void main(void){
     int opcao;
@@ -12,13 +8,15 @@ void main(void){
 
     numProgramas = 3;
     i = 0;
-    while(i < numProgramas){
-        progInicio[i] = 300 * i + 300;
+    while(i <= numProgramas){
+        progInicio[i] = i * 300;
+        output(progInicio[i]);
         i = i + 1;
     }
 
     while(1){
-        output(1);
+        i = 1;
+        output(i);
         opcao = input();
 
         if(opcao == 1){
@@ -26,7 +24,7 @@ void main(void){
             escolha = input();
 
             if(escolha >= 0){
-                if(escolha < numProgramas){
+                if(escolha <= numProgramas){
                     dispatch(progInicio[escolha]);
                 }
             }

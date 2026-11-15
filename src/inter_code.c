@@ -6,7 +6,8 @@
 #include <string.h>
 #include <math.h>
 
-#define MAX_REGS 57
+#define MAX_REGS 54
+
 
 int lineCounter = 0;
 int cont_reg = 0;
@@ -225,6 +226,11 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
 			else if(strcmp(t->lexema, "input") == 0){
 				op1 = atribuiReg(NULL, NULL);
 				insere_inst("IN", op1, "-", "-", 0, quadrupla);
+				return op1;
+			}
+			else if(strcmp(t->lexema, "dispatch") == 0){
+				op1 = generateInterCode(t->childL, quadrupla);
+    			insere_inst("DISPATCH", op1, "-", "-", 0, quadrupla);
 				return op1;
 			}
 			else{

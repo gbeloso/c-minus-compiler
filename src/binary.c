@@ -318,6 +318,41 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
             strcat(operacao, "000000000000000000000000");
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
+        else if(strcmp("strr", aux->instrucao) == 0){
+            char * rd = convertReg(aux->rd);
+            int n = atoi(aux->imm);
+            char * imm = toBinaryString(n, 12);
+            char * rn = convertReg(aux->rn);
+            char * operacao = (char *) malloc(sizeof(char)*32);
+            sprintf(operacao, "00011100");   // strr = 28
+            strcat(operacao, rn);
+            strcat(operacao, rd);
+            strcat(operacao, imm);
+            insereBinInst(criaBinInst(operacao), binCodeList);
+        }
+        else if(strcmp("ldra", aux->instrucao) == 0){
+            char * rd = convertReg(aux->rd);
+            int n = getLabelLine(aux->imm, assemblyCodeList);  // <- resolve LABEL, nao literal
+            char * imm = toBinaryString(n, 12);
+            char * operacao = (char *) malloc(sizeof(char)*32);
+            sprintf(operacao, "00001101");   // MESMO opcode do ldrb
+            strcat(operacao, "000000");
+            strcat(operacao, rd);
+            strcat(operacao, imm);
+            insereBinInst(criaBinInst(operacao), binCodeList);
+        }
+        else if(strcmp("ldrr", aux->instrucao) == 0){
+            char * rd = convertReg(aux->rd);
+            int n = atoi(aux->imm);
+            char * imm = toBinaryString(n, 12);
+            char * rn = convertReg(aux->rn);
+            char * operacao = (char *) malloc(sizeof(char)*32);
+            sprintf(operacao, "00011101");   // ldrr = 29
+            strcat(operacao, rn);
+            strcat(operacao, rd);
+            strcat(operacao, imm);
+            insereBinInst(criaBinInst(operacao), binCodeList);
+        }
         else{
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00011000");

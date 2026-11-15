@@ -421,6 +421,65 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
             insereAssemblyInst("halt", NULL, NULL, NULL, NULL, assemblyList);
             aux = aux->proximo;
         }
+        else if(strcmp("DISPATCH", aux->instrucao) == 0){
+            static int dispatchCount = 0;
+            char labelSave[16], labelFim[16], labelRet[16];
+            char labelLoad[16], labelFimLoad[16];
+            sprintf(labelSave, "SAVE%d", dispatchCount);
+            sprintf(labelFim,  "ENDS%d", dispatchCount);
+            sprintf(labelRet,  "RET%d",  dispatchCount);
+            sprintf(labelLoad,    "RLOAD%d", dispatchCount);
+            sprintf(labelFimLoad, "RFIM%d",  dispatchCount);
+            dispatchCount++;
+
+            // ---- salvamento do contexto do SO ----
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0",   assemblyList);
+            insereAssemblyInst("ldrb", "R57", NULL, NULL, "0",   assemblyList);
+            insereAssemblyInst("ldrb", "R54", NULL, NULL, "236", assemblyList);
+
+            insereAssemblyInst(labelSave, NULL, NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("cmpi", "R55", "R56", NULL, "64",   assemblyList);
+            insereAssemblyInst("beq",  NULL,  "R55", NULL, labelFim, assemblyList);
+            insereAssemblyInst("strr", "R56", "R54", NULL, "0",    assemblyList);
+            insereAssemblyInst("addi", "R56", "R56", NULL, "1",    assemblyList);
+            insereAssemblyInst("addi", "R54", "R54", NULL, "1",    assemblyList);
+            insereAssemblyInst("jmp",  NULL,  NULL,  NULL, labelSave, assemblyList);
+            insereAssemblyInst(labelFim, NULL, NULL, NULL, NULL, assemblyList);
+
+            // ---- transferencia de controle ----
+            insereAssemblyInst("mov",  "R57", NULL, aux->op1, NULL, assemblyList);
+            insereAssemblyInst("ldra", "R56", NULL, NULL, labelRet, assemblyList);  // R56 <= linha de RETn
+            insereAssemblyInst("jmpr", aux->op1, NULL, NULL,  NULL, assemblyList);
+            insereAssemblyInst(labelRet, NULL, NULL, NULL, NULL, assemblyList);     // halt do alvo retorna aqui
+
+            // ---- restauracao do contexto do SO ----
+            insereAssemblyInst("ldrb", "R57", NULL, NULL, "0",   assemblyList);  // base do SO = 0
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0",   assemblyList);  // contador = 0
+            insereAssemblyInst("ldrb", "R54", NULL, NULL, "236", assemblyList);  // ponteiro = base dos slots
+
+            // loop: restaura R0..R53
+            insereAssemblyInst(labelLoad, NULL, NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("cmpi", "R55", "R56", NULL, "54",   assemblyList);  // para em 54 -> restaura 0..53
+            insereAssemblyInst("beq",  NULL,  "R55", NULL, labelFimLoad, assemblyList);
+            insereAssemblyInst("ldrr", "R56", "R54", NULL, "0",    assemblyList);  // R[R[R56]] <= MEM[R54]
+            insereAssemblyInst("addi", "R56", "R56", NULL, "1",    assemblyList);
+            insereAssemblyInst("addi", "R54", "R54", NULL, "1",    assemblyList);
+            insereAssemblyInst("jmp",  NULL,  NULL,  NULL, labelLoad, assemblyList);
+            insereAssemblyInst(labelFimLoad, NULL, NULL, NULL, NULL, assemblyList);
+
+            // restauracao manual dos demais (R56 = base-zero para loads absolutos)
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0",   assemblyList);
+            insereAssemblyInst("ldr",  "R55", "R56", NULL, "291", assemblyList);  // R55 <= MEM[291]
+            insereAssemblyInst("ldr",  "R58", "R56", NULL, "294", assemblyList);  // R58 <= MEM[294]
+            insereAssemblyInst("ldr",  "R59", "R56", NULL, "295", assemblyList);  // R59 <= MEM[295]
+            insereAssemblyInst("ldr",  "R60", "R56", NULL, "296", assemblyList);  // R60 <= MEM[296]
+            insereAssemblyInst("ldr",  "fp",  "R56", NULL, "297", assemblyList);  // fp  <= MEM[297]
+            insereAssemblyInst("ldr",  "sp",  "R56", NULL, "298", assemblyList);  // sp  <= MEM[298]
+            insereAssemblyInst("ldr",  "R63", "R56", NULL, "299", assemblyList);  // R63 <= MEM[299]
+
+            aux = aux->proximo;
+        }
+
         else{
             aux = aux->proximo;
         }
