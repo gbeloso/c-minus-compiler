@@ -353,6 +353,24 @@ void geraBinCode(TBinCode * binCodeList, TAssemblyCode * assemblyCodeList){
             strcat(operacao, imm);
             insereBinInst(criaBinInst(operacao), binCodeList);
         }
+        else if(strcmp("clk", aux->instrucao) == 0){
+            int n = atoi(aux->imm);
+            char * imm = toBinaryString(n, 12);
+            char * operacao = (char *) malloc(sizeof(char)*32);
+            sprintf(operacao, "00011010");   // clk = 26
+            strcat(operacao, "000000000000");
+            strcat(operacao, imm);
+            insereBinInst(criaBinInst(operacao), binCodeList);
+        }
+        else if(strcmp("ldrclk", aux->instrucao) == 0){
+            char * rd = convertReg(aux->rd);
+            char * operacao = (char *) malloc(sizeof(char)*32);
+            sprintf(operacao, "00011011");   // ldrclk = 27
+            strcat(operacao, "000000");
+            strcat(operacao, rd);
+            strcat(operacao, "000000000000");
+            insereBinInst(criaBinInst(operacao), binCodeList);
+        }
         else{
             char * operacao = (char *) malloc(sizeof(char)*32);
             sprintf(operacao, "00011000");

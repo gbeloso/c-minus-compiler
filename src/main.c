@@ -53,7 +53,9 @@ int main(int argc, char ** argv){
     insere(0, "output", "global", VOID, FunNode, tabela[temp]);
     temp = hash("dispatch", "global");
     insere(0, "dispatch", "global", VOID, FunNode, tabela[temp]);
-    
+    temp = hash("dispatchClk", "global");
+    insere(0, "dispatchClk", "global", INT, FunNode, tabela[temp]);
+
     analyze(savedTree);
     temp = hash("main", "global");
     if(buscar("main", "global", FunNode, tabela[temp]->inicio) == NULL){

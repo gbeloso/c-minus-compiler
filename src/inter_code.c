@@ -233,6 +233,13 @@ char * generateInterCode(TreeNode * t, Tquadruplas * quadrupla){
     			insere_inst("DISPATCH", op1, "-", "-", 0, quadrupla);
 				return op1;
 			}
+			else if(strcmp(t->lexema, "dispatchClk") == 0){
+				op1 = generateInterCode(t->childL, quadrupla);            // base_p
+				op2 = generateInterCode(t->childL->sibling, quadrupla);   // pc de retomada
+				op3 = atribuiReg(NULL, NULL);                             // resultado (novo pc)
+				insere_inst("DISPATCHCLK", op1, op2, op3, 0, quadrupla);
+				return op3;
+			}
 			else{
 				TreeNode * aux;
 				int cont = 0;

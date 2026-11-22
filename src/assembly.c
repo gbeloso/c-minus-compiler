@@ -479,7 +479,148 @@ int geraAssembly(Tquadruplas * quadruplas, TAssemblyCode * assemblyList){
 
             aux = aux->proximo;
         }
+        else if(strcmp("DISPATCHCLK", aux->instrucao) == 0){
+            // Etapa 2b: restaura o contexto do processo, retoma a execucao no PC
+            // recebido (nao mais na base) por uma fatia de clock, e na volta captura
+            // o novo PC, salva o contexto do processo (base+236) e restaura o SO.
+            // base_p  -> MEM[235]   (sobrevive a execucao do processo)
+            // pc       -> MEM[234]   (idem)
+            // R57 so contem base_p junto ao salto (registrador-base de desvios).
+            static int dispatchClkCount = 0;
+            char labelSaveSO[20], labelFimSO[20];
+            char labelLoadP[20], labelFimLoadP[20];
+            char labelRet[20];
+            char labelSaveP[20], labelFimSaveP[20];
+            char labelLoadSO[20], labelFimLoadSO[20];
+            sprintf(labelSaveSO,   "DSAVESO%d",   dispatchClkCount);
+            sprintf(labelFimSO,    "DFIMSO%d",    dispatchClkCount);
+            sprintf(labelLoadP,    "DLOADP%d",    dispatchClkCount);
+            sprintf(labelFimLoadP, "DFLOADP%d",   dispatchClkCount);
+            sprintf(labelRet,      "DRET%d",      dispatchClkCount);
+            sprintf(labelSaveP,    "DSAVEP%d",    dispatchClkCount);
+            sprintf(labelFimSaveP, "DFSAVEP%d",   dispatchClkCount);
+            sprintf(labelLoadSO,   "DLOADSO%d",   dispatchClkCount);
+            sprintf(labelFimLoadSO,"DFLOADSO%d",  dispatchClkCount);
+            dispatchClkCount++;
 
+            // guarda base_p (op1) em MEM[235] e pc (op2) em MEM[234]
+            //insereAssemblyInst("out", aux->op1, NULL, NULL, NULL, assemblyList);
+            //insereAssemblyInst("posin", NULL, NULL, NULL, NULL, assemblyList);
+            //insereAssemblyInst("out", aux->op2, NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);
+            insereAssemblyInst("str",  aux->op1, "R56", NULL, "235", assemblyList); // MEM[235] <= base_p
+            insereAssemblyInst("str",  aux->op2, "R56", NULL, "234", assemblyList); // MEM[234] <= pc
+
+            // ===== 1. SALVA CONTEXTO DO SO (bloco 236-299), R57 = 0 =====
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0",   assemblyList);
+            insereAssemblyInst("ldrb", "R54", NULL, NULL, "236", assemblyList);
+            insereAssemblyInst(labelSaveSO, NULL, NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("cmpi", "R55", "R56", NULL, "64", assemblyList);
+            insereAssemblyInst("beq",  NULL,  "R55", NULL, labelFimSO, assemblyList);
+            insereAssemblyInst("strr", "R56", "R54", NULL, "0", assemblyList);
+            insereAssemblyInst("addi", "R56", "R56", NULL, "1", assemblyList);
+            insereAssemblyInst("addi", "R54", "R54", NULL, "1", assemblyList);
+            insereAssemblyInst("jmp",  NULL,  NULL,  NULL, labelSaveSO, assemblyList);
+            insereAssemblyInst(labelFimSO, NULL, NULL, NULL, NULL, assemblyList);
+
+            // ===== 2. RESTAURA CONTEXTO DO PROCESSO (bloco base_p+236) =====
+            // R57 ainda = 0 aqui (loop usa desvios); base_p vem de MEM[235].
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);       // base-zero
+            insereAssemblyInst("ldr",  "R54", "R56", NULL, "235", assemblyList);    // R54 <= base_p
+            insereAssemblyInst("addi", "R54", "R54", NULL, "236", assemblyList);    // R54 <= base_p + 236
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);       // indice
+            insereAssemblyInst(labelLoadP, NULL, NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("cmpi", "R55", "R56", NULL, "54", assemblyList);     // restaura R0..R53 do processo
+            insereAssemblyInst("beq",  NULL,  "R55", NULL, labelFimLoadP, assemblyList);
+            insereAssemblyInst("ldrr", "R56", "R54", NULL, "0", assemblyList);      // R[R[R56]] <= MEM[R54]
+            insereAssemblyInst("addi", "R56", "R56", NULL, "1", assemblyList);
+            insereAssemblyInst("addi", "R54", "R54", NULL, "1", assemblyList);
+            insereAssemblyInst("jmp",  NULL,  NULL,  NULL, labelLoadP, assemblyList);
+            insereAssemblyInst(labelFimLoadP, NULL, NULL, NULL, NULL, assemblyList);
+            // load manual (R54 = base_p)
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);       // base-zero
+            insereAssemblyInst("ldr",  "R54", "R56", NULL, "235", assemblyList);    // R54 <= base_p
+            insereAssemblyInst("ldr",  "R55", "R54", NULL, "291", assemblyList);
+            insereAssemblyInst("ldr",  "R58", "R54", NULL, "294", assemblyList);
+            insereAssemblyInst("ldr",  "R59", "R54", NULL, "295", assemblyList);
+            insereAssemblyInst("ldr",  "R60", "R54", NULL, "296", assemblyList);
+            insereAssemblyInst("ldr",  "fp",  "R54", NULL, "297", assemblyList);
+            insereAssemblyInst("ldr",  "sp",  "R54", NULL, "298", assemblyList);
+            insereAssemblyInst("ldr",  "R63", "R54", NULL, "299", assemblyList);
+
+            // ===== 3. ARMA CLOCK E RETOMA NO PC =====
+            // recarrega base_p -> R57 e pc -> R54, ja apos restaurar os GPRs do processo.
+            insereAssemblyInst("ldra", "R56", NULL, NULL, labelRet, assemblyList);  // endereco de retorno (R56)
+            insereAssemblyInst("ldrb", "R54", NULL, NULL, "0", assemblyList);       // base-zero
+            insereAssemblyInst("ldr",  "R54", "R54", NULL, "234", assemblyList);    // R54 <= pc (destino do jmpr)
+            insereAssemblyInst("ldrb", "R57", NULL, NULL, "0", assemblyList);       // base-zero
+            insereAssemblyInst("ldr",  "R57", "R57", NULL, "235", assemblyList);    // R57 <= base_p (reg-base)
+            //insereAssemblyInst("out", "R54", NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("clk",  NULL, NULL, NULL, "20", assemblyList);       // fatia de 20 instrucoes
+            insereAssemblyInst("jmpr", "R54", NULL, NULL, NULL, assemblyList);      // retoma no PC
+        
+            // ===== VOLTA: clock estourou =====
+            insereAssemblyInst(labelRet, NULL, NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("ldrb", "R57", NULL, NULL, "0", assemblyList);       // R57 <= 0 (SO desvia certo)
+
+            // captura o novo PC e guarda em MEM[234]
+            insereAssemblyInst("ldrclk", "R54", NULL, NULL, NULL, assemblyList);    // R54 <= PC interrompido
+            //insereAssemblyInst("out", "R54", NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);
+            insereAssemblyInst("str",  "R54", "R56", NULL, "234", assemblyList);    // MEM[234] <= novo PC
+
+            // ===== 4. SALVA CONTEXTO DO PROCESSO =====
+            // save manual (R54 = base_p)
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);       // base-zero
+            insereAssemblyInst("ldr",  "R54", "R56", NULL, "235", assemblyList);    // R54 <= base_p
+            insereAssemblyInst("str",  "R55", "R54", NULL, "291", assemblyList);
+            insereAssemblyInst("str",  "R58", "R54", NULL, "294", assemblyList);
+            insereAssemblyInst("str",  "R59", "R54", NULL, "295", assemblyList);
+            insereAssemblyInst("str",  "R60", "R54", NULL, "296", assemblyList);
+            insereAssemblyInst("str",  "fp",  "R54", NULL, "297", assemblyList);
+            insereAssemblyInst("str",  "sp",  "R54", NULL, "298", assemblyList);
+            insereAssemblyInst("str",  "R63", "R54", NULL, "299", assemblyList);
+            //(bloco base_p+236) 
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);
+            insereAssemblyInst("ldr",  "R54", "R56", NULL, "235", assemblyList);    // R54 <= base_p
+            insereAssemblyInst("addi", "R54", "R54", NULL, "236", assemblyList);    // R54 <= base_p + 236
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);
+            insereAssemblyInst(labelSaveP, NULL, NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("cmpi", "R55", "R56", NULL, "54", assemblyList);     // salva R0..R53 do processo
+            insereAssemblyInst("beq",  NULL,  "R55", NULL, labelFimSaveP, assemblyList);
+            insereAssemblyInst("strr", "R56", "R54", NULL, "0", assemblyList);
+            insereAssemblyInst("addi", "R56", "R56", NULL, "1", assemblyList);
+            insereAssemblyInst("addi", "R54", "R54", NULL, "1", assemblyList);
+            insereAssemblyInst("jmp",  NULL,  NULL,  NULL, labelSaveP, assemblyList);
+            insereAssemblyInst(labelFimSaveP, NULL, NULL, NULL, NULL, assemblyList);
+
+            // ===== 5. RESTAURA CONTEXTO DO SO (bloco 236-299) =====
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);
+            insereAssemblyInst("ldrb", "R54", NULL, NULL, "236", assemblyList);
+            insereAssemblyInst(labelLoadSO, NULL, NULL, NULL, NULL, assemblyList);
+            insereAssemblyInst("cmpi", "R55", "R56", NULL, "54", assemblyList);     // restaura R0..R53 do SO
+            insereAssemblyInst("beq",  NULL,  "R55", NULL, labelFimLoadSO, assemblyList);
+            insereAssemblyInst("ldrr", "R56", "R54", NULL, "0", assemblyList);
+            insereAssemblyInst("addi", "R56", "R56", NULL, "1", assemblyList);
+            insereAssemblyInst("addi", "R54", "R54", NULL, "1", assemblyList);
+            insereAssemblyInst("jmp",  NULL,  NULL,  NULL, labelLoadSO, assemblyList);
+            insereAssemblyInst(labelFimLoadSO, NULL, NULL, NULL, NULL, assemblyList);
+            // manual (R56 = base-zero)
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);
+            insereAssemblyInst("ldr",  "R55", "R56", NULL, "291", assemblyList);
+            insereAssemblyInst("ldr",  "R58", "R56", NULL, "294", assemblyList);
+            insereAssemblyInst("ldr",  "R59", "R56", NULL, "295", assemblyList);
+            insereAssemblyInst("ldr",  "R60", "R56", NULL, "296", assemblyList);
+            insereAssemblyInst("ldr",  "fp",  "R56", NULL, "297", assemblyList);
+            insereAssemblyInst("ldr",  "sp",  "R56", NULL, "298", assemblyList);
+            insereAssemblyInst("ldr",  "R63", "R56", NULL, "299", assemblyList);
+
+            // ===== 6. DEVOLVE O NOVO PC no registrador de resultado =====
+            insereAssemblyInst("ldrb", "R56", NULL, NULL, "0", assemblyList);
+            insereAssemblyInst("ldr",  aux->res, "R56", NULL, "234", assemblyList); // res <= MEM[234]
+
+            aux = aux->proximo;
+        }
         else{
             aux = aux->proximo;
         }
