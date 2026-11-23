@@ -1,8 +1,8 @@
 int numProgramas;
-int progInicio[5];
+int progInicio[6];
 int numExecucao;
-int filaProgramas[5];
-int progRetomada[5];
+int filaProgramas[6];
+int progRetomada[6];
 
 
 void main(void){
@@ -13,7 +13,7 @@ void main(void){
     int base;
     int vivos;
 
-    numProgramas = 4;
+    numProgramas = 5;
     base = 400;
 
     progInicio[0] = 0;
